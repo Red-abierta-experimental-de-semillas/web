@@ -4,9 +4,9 @@
     <h1 class="mb-4 pt-5">Política de Cookies</h1>
     <p><strong>Última actualización:</strong> 04/12/2024</p>
 
-    <p>Esta Política de Cookies explica cómo <strong>La biblioteca de la semilla</strong> ("nosotros", "nuestro" o
+    <p>Esta Política de Cookies explica cómo <strong>Red abierta experimental de semillas (RAES)</strong> ("nosotros", "nuestro" o
       "nos") utiliza cookies y tecnologías similares para reconocer a los visitantes cuando acceden a nuestro sitio web
-      <strong>labibliotecadelasemilla.org</strong>. Explica qué son estas tecnologías y por qué las utilizamos, así como
+      <strong>red-experimental-semillas.web.app</strong>. Explica qué son estas tecnologías y por qué las utilizamos, así como
       las opciones para controlarlas.</p>
 
     <h2 class="mt-5">1. ¿Qué son las cookies?</h2>
@@ -77,7 +77,7 @@
     <h2 class="mt-5">5. Contacto</h2>
     <p>Si tiene alguna pregunta sobre nuestra Política de Cookies, puede contactarnos en:</p>
     <ul>
-      <li><strong>Correo electrónico:</strong> <a href="mailto:la.biblioteca.de.la.semilla@gmail.com">la.biblioteca.de.la.semilla@gmail.com</a>
+      <li><strong>Correo electrónico:</strong> <a href="mailto:info@red-experimental-semillas.web.app">info@red-experimental-semillas.web.app</a>
       </li>
     </ul>
   </div>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://labibliotecadelasemilla.org/sitemap.xml
+Sitemap: https://red-experimental-semillas.web.app/sitemap.xml

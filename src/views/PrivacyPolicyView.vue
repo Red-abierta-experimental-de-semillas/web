@@ -3,9 +3,9 @@
     <h1 class="mb-4 pt-5">Política de Privacidad</h1>
     <p><strong>Última actualización:</strong> 04/12/2024</p>
 
-    <p>En <strong>La biblioteca de la semilla</strong> ("nosotros", "nuestro" o "nos") nos comprometemos a proteger su
+    <p>En <strong>Red abierta experimental de semillas (RAES)</strong> ("nosotros", "nuestro" o "nos") nos comprometemos a proteger su
       privacidad. Esta Política de Privacidad describe cómo recopilamos, utilizamos, y compartimos su información
-      personal cuando visita o utiliza nuestro sitio web <strong>labibliotecadelasemilla.org</strong>.</p>
+      personal cuando visita o utiliza nuestro sitio web <strong>red-experimental-semillas.web.app</strong>.</p>
 
     <h2 class="mt-5">1. Información que recopilamos</h2>
     <p>Recopilamos diferentes tipos de información personal cuando usted interactúa con nuestro sitio web,
@@ -89,7 +89,7 @@
     <p>Si tiene alguna pregunta o inquietud sobre esta Política de Privacidad o sobre cómo manejamos su información
       personal, por favor contáctenos en:</p>
     <ul>
-      <li><strong>Correo electrónico:</strong> <a href="mailto:la.biblioteca.de.la.semilla@gmail.com">la.biblioteca.de.la.semilla@gmail.com</a>
+      <li><strong>Correo electrónico:</strong> <a href="mailto:info@red-experimental-semillas.web.app">info@red-experimental-semillas.web.app</a>
       </li>
     </ul>
   </div>
