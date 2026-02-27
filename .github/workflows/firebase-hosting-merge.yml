@@ -1,0 +1,33 @@
+name: Deploy Web to Firebase Hosting on push
+'on':
+  push:
+    branches:
+      - main
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm ci
+      - name: Create .env.production
+        run: |
+          echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}" >> .env.production
+          echo "VITE_FIREBASE_AUTH_DOMAIN=red-experimental-semillas.firebaseapp.com" >> .env.production
+          echo "VITE_FIREBASE_PROJECT_ID=red-experimental-semillas" >> .env.production
+          echo "VITE_FIREBASE_STORAGE_BUCKET=red-experimental-semillas.firebasestorage.app" >> .env.production
+          echo "VITE_FIREBASE_MESSAGING_SENDER_ID=828461210630" >> .env.production
+          echo "VITE_FIREBASE_APP_ID=1:828461210630:web:be2539a3844bd632007787" >> .env.production
+          echo "VITE_API_BASE_URL=https://europe-west1-red-experimental-semillas.cloudfunctions.net/api" >> .env.production
+      - name: Build
+        run: npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_RED_EXPERIMENTAL_SEMILLAS }}'
+          channelId: live
+          projectId: red-experimental-semillas
