@@ -249,62 +249,79 @@ function onShare() {
 
         <!-- Tab: Miembros -->
         <div class="tab-pane fade mt-4" id="members">
-          <!-- Solicitudes pendientes (solo visible para el owner) -->
-          <div v-if="isOwner && pendingMembers.length > 0" class="mb-4">
-            <h5>Solicitudes pendientes</h5>
-            <div class="list-group">
-              <div
-                class="list-group-item d-flex justify-content-between align-items-start"
-                v-for="member in pendingMembers"
-                :key="member.id"
-              >
-                <div class="d-flex align-items-center mb-2 mb-sm-0">
-                  <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark">
-                    <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-2 object-fit-cover shadow-sm" width="35" height="35" alt="avatar" />
-                    <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
-                  </RouterLink>
-                  <p class="mb-0 text-muted ms-3" v-if="member.message">
-                    <small>"{{ member.message }}"</small>
-                  </p>
-                </div>
-                <div class="btn-group btn-group-sm">
-                  <button
-                    class="btn btn-success"
-                    @click="onManageMember(member.id, 'ACCEPTED')"
-                  >
-                    <i class="bi bi-check"></i> Aceptar
-                  </button>
-                  <button
-                    class="btn btn-danger"
-                    @click="onManageMember(member.id, 'REJECTED')"
-                  >
-                    <i class="bi bi-x"></i> Rechazar
-                  </button>
+          <template v-if="user">
+            <!-- Solicitudes pendientes (solo visible para el owner) -->
+            <div v-if="isOwner && pendingMembers.length > 0" class="mb-4">
+              <h5>Solicitudes pendientes</h5>
+              <div class="list-group">
+                <div
+                  class="list-group-item d-flex justify-content-between align-items-start"
+                  v-for="member in pendingMembers"
+                  :key="member.id"
+                >
+                  <div class="d-flex align-items-center mb-2 mb-sm-0">
+                    <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark">
+                      <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-2 object-fit-cover shadow-sm" width="35" height="35" alt="avatar" />
+                      <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
+                    </RouterLink>
+                    <p class="mb-0 text-muted ms-3" v-if="member.message">
+                      <small>"{{ member.message }}"</small>
+                    </p>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <button
+                      class="btn btn-success"
+                      @click="onManageMember(member.id, 'ACCEPTED')"
+                    >
+                      <i class="bi bi-check"></i> Aceptar
+                    </button>
+                    <button
+                      class="btn btn-danger"
+                      @click="onManageMember(member.id, 'REJECTED')"
+                    >
+                      <i class="bi bi-x"></i> Rechazar
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Miembros aceptados -->
-          <h5>Miembros del proyecto</h5>
-          <div class="list-group" v-if="acceptedMembers.length > 0">
-            <div
-              class="list-group-item d-flex justify-content-between align-items-center"
-              v-for="member in acceptedMembers"
-              :key="member.id"
-            >
-              <span class="d-flex align-items-center">
-                <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark hover-primary">
-                  <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-3 object-fit-cover shadow-sm" width="40" height="40" alt="avatar" />
-                  <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
-                </RouterLink>
-                <span class="badge text-bg-warning ms-3" v-if="member.role === 'OWNER'">Creador</span>
-                <span class="badge text-bg-info ms-3" v-else>Voluntario</span>
-              </span>
-              <small class="text-muted">{{ MEMBERSHIP_STATUS_LABELS[member.status] }}</small>
+            <!-- Miembros aceptados -->
+            <h5>Miembros del proyecto</h5>
+            <div class="list-group" v-if="acceptedMembers.length > 0">
+              <div
+                class="list-group-item d-flex justify-content-between align-items-center"
+                v-for="member in acceptedMembers"
+                :key="member.id"
+              >
+                <span class="d-flex align-items-center">
+                  <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark hover-primary">
+                    <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-3 object-fit-cover shadow-sm" width="40" height="40" alt="avatar" />
+                    <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
+                  </RouterLink>
+                  <span class="badge text-bg-warning ms-3" v-if="member.role === 'OWNER'">Creador</span>
+                  <span class="badge text-bg-info ms-3" v-else>Voluntario</span>
+                </span>
+                <small class="text-muted">{{ MEMBERSHIP_STATUS_LABELS[member.status] }}</small>
+              </div>
+            </div>
+            <p class="text-muted" v-else>No hay miembros todavía.</p>
+          </template>
+          
+          <div v-else class="card border-0 bg-light text-center py-5 shadow-sm rounded-4 mt-4">
+            <div class="card-body">
+              <i class="bi bi-lock-fill display-4 d-block mb-3 text-secondary"></i>
+              <h4 class="text-dark fw-bold">Inicia sesión para ver los miembros</h4>
+              <p class="text-muted mx-auto" style="max-width: 500px">
+                Por motivos de privacidad, la lista de participantes y voluntarios 
+                solo es visible para los miembros de la red.
+              </p>
+              
+              <button class="btn btn-primary px-4 py-2 rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                Iniciar Sesión
+              </button>
             </div>
           </div>
-          <p class="text-muted" v-else>No hay miembros todavía.</p>
         </div>
       </div>
     </section>
