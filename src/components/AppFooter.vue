@@ -18,6 +18,9 @@ import {RouterLink} from 'vue-router'
           <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'privacy-policy' }">Política de privacidad
           </RouterLink>
         </li>
+        <li class="nav-item">
+          <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'terms-of-service' }">Términos de servicio</RouterLink>
+        </li>
       </ul>
     </div>
   </footer>
