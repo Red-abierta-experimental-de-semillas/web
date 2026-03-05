@@ -227,30 +227,36 @@ onMounted(async () => {
 
         <div v-for="(post, index) in posts" :key="post.id" class="d-flex border-bottom forum-post-row" :class="{'bg-light': index % 2 !== 0}">
           <!-- Columna de Usuario (Desktop) -->
-          <div class="user-column px-3 py-4 text-center border-end d-none d-md-block" style="width: 220px; flex-shrink: 0; background-color: rgba(0,0,0,0.015);">
+          <div class="user-column px-3 py-4 text-center border-end d-none d-md-block" style="width: 140px; flex-shrink: 0; background-color: rgba(0,0,0,0.015);">
             <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }" class="text-decoration-none text-dark d-block forum-user-link">
               <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
                    :alt="post.userName"
-                   class="rounded-circle shadow-sm object-fit-cover mb-3 bg-white"
-                   width="85" height="85" />
-              <strong class="d-block text-truncate fs-6 mb-1">{{ post.userName || 'Usuario' }}</strong>
+                   class="rounded-circle shadow-sm object-fit-cover mb-2 bg-white"
+                   width="56" height="56" />
+              <strong class="d-block text-truncate mb-1" style="font-size: 0.9rem;">{{ post.userName || 'Usuario' }}</strong>
             </RouterLink>
-            <div class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle rounded-pill small px-3 mt-1 fw-normal">Miembro</div>
+            <div v-if="project && post.userId === project.owner" class="badge bg-warning text-dark border border-warning-subtle rounded-pill mt-1 fw-bold" style="font-size: 0.70rem;">CREADOR</div>
+            <div v-else class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle rounded-pill mt-1 fw-normal" style="font-size: 0.70rem;">Miembro</div>
           </div>
           
           <!-- Columna de Contenido -->
           <div class="content-column p-4 flex-grow-1" style="min-width: 0;">
             <!-- Header Móvil (solo visible en pantallas pequeñas) -->
-            <div class="d-flex align-items-center mb-3 d-md-none border-bottom pb-3">
-              <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }">
-                <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
-                     :alt="post.userName"
-                     class="rounded-circle me-3 shadow-sm object-fit-cover"
-                     width="48" height="48" />
-              </RouterLink>
-              <div>
-                <strong class="d-block text-dark">{{ post.userName || 'Usuario' }}</strong>
-                <small class="text-muted"><i class="bi bi-clock me-1"></i> {{ formatDate(post.createdAt) }}</small>
+            <div class="d-flex justify-content-between align-items-center mb-3 d-md-none border-bottom pb-3">
+              <div class="d-flex align-items-center">
+                <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }">
+                  <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
+                       :alt="post.userName"
+                       class="rounded-circle me-3 shadow-sm object-fit-cover"
+                       width="40" height="40" />
+                </RouterLink>
+                <div>
+                  <strong class="d-block text-dark lh-sm" style="font-size: 0.95rem;">{{ post.userName || 'Usuario' }}</strong>
+                  <div class="d-flex align-items-center gap-2 mt-1">
+                    <span v-if="project && post.userId === project.owner" class="badge bg-warning text-dark rounded-pill fw-bold" style="font-size: 0.6rem;">CREADOR</span>
+                    <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i> {{ formatDate(post.createdAt) }}</small>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -293,16 +299,16 @@ onMounted(async () => {
               </div>
             </div>
             
-            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 mt-md-5 pt-md-0 d-md-flex text-md-end" v-if="user">
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-3 mt-md-4 pt-md-0 d-md-flex text-md-end border-top" v-if="user">
               <div>
-                <button class="btn btn-sm px-3 rounded-pill" :class="isPostLikedByUser(post) ? 'btn-danger text-white' : 'btn-outline-danger'" @click="toggleLike(post)" title="Me gusta">
-                  <i class="bi" :class="isPostLikedByUser(post) ? 'bi-heart-fill' : 'bi-heart'"></i>
-                  <span class="ms-2 fw-bold">{{ post.likedBy?.length || 0 }}</span>
+                <button class="btn btn-sm btn-link text-decoration-none px-2 text-muted" :class="{'text-danger': isPostLikedByUser(post)}" @click="toggleLike(post)" title="Me gusta">
+                  <i class="bi fs-5" :class="isPostLikedByUser(post) ? 'bi-heart-fill' : 'bi-heart'"></i>
+                  <span class="ms-1 fw-medium" v-if="post.likedBy?.length">{{ post.likedBy.length }}</span>
                 </button>
               </div>
               <div v-if="isMember">
-                <button class="btn btn-sm btn-outline-primary px-3 rounded-pill" @click="initiateReply(post)">
-                  <i class="bi bi-reply-fill"></i> Responder
+                <button class="btn btn-sm btn-light border text-muted px-3 rounded-pill" @click="initiateReply(post)" title="Responder">
+                  <i class="bi bi-reply-fill fs-5"></i>
                 </button>
               </div>
             </div>
