@@ -35,7 +35,7 @@ const handleSignOut = () => {
             <RouterLink :to="{ name: 'home' }" class="nav-link">Proyectos</RouterLink>
           </li>
           <li class="nav-item me-lg-3 text-end">
-            <RouterLink :to="{ name: 'forum-general' }" class="nav-link">Foro General</RouterLink>
+            <RouterLink :to="{ name: 'forum-index' }" class="nav-link">Foros</RouterLink>
           </li>
           <li class="nav-item me-lg-3 text-end">
             <RouterLink :to="{ name: 'what-is-this' }" class="nav-link">¿Qué es?</RouterLink>
@@ -68,7 +68,7 @@ const handleSignOut = () => {
             <RouterLink :to="{ name: 'home' }" class="nav-link">Proyectos</RouterLink>
           </li>
           <li class="nav-item me-lg-2 text-end">
-            <RouterLink :to="{ name: 'forum-general' }" class="nav-link">Foro General</RouterLink>
+            <RouterLink :to="{ name: 'forum-index' }" class="nav-link">Foros</RouterLink>
           </li>
           <li class="nav-item me-lg-2 text-end">
             <RouterLink :to="{ name: 'what-is-this' }" class="nav-link">¿Qué es?</RouterLink>

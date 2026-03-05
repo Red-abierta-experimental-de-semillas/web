@@ -91,15 +91,37 @@ function initiateReply(post: any) {
   document.getElementById('forum-reply-box')?.scrollIntoView({ behavior: 'smooth' })
 }
 
-function initiateQuote(post: any) {
-  const quoteText = post.content.split('\n').map((line: string) => `> ${line.replace(/^> /, '')}`).join('\n')
-  newMessage.value = `${newMessage.value}\n\n> **${post.userName} escribió:**\n${quoteText}\n\n`.trimStart()
-  document.getElementById('forum-reply-box')?.scrollIntoView({ behavior: 'smooth' })
+function getAnsweredPost(replyId: string) {
+  return posts.value.find(p => p.id === replyId)
 }
 
-function findPostPrefix(replyId: string) {
-  const parent = posts.value.find(p => p.id === replyId)
-  return parent ? `En respuesta a ${parent.userName}` : 'Respuesta a un mensaje anterior'
+function isPostLikedByUser(post: any) {
+  if (!user.value || !post.likedBy) return false
+  return post.likedBy.includes(user.value.id)
+}
+
+async function toggleLike(post: any) {
+  if (!user.value) return
+  
+  // Optimistic UI update
+  const originalLikes = [...(post.likedBy || [])]
+  const uid = user.value.id
+  if (!post.likedBy) post.likedBy = []
+  
+  const idx = post.likedBy.indexOf(uid)
+  if (idx > -1) {
+    post.likedBy.splice(idx, 1)
+  } else {
+    post.likedBy.push(uid)
+  }
+  
+  try {
+    const updatedPost = await projectService.toggleDiscussionPostLike(projectId, post.id)
+    post.likedBy = updatedPost.likedBy
+  } catch (e) {
+    console.error('Error al dar me gusta:', e)
+    post.likedBy = originalLikes
+  }
 }
 
 function handleFileChange(e: Event) {
@@ -171,7 +193,10 @@ onMounted(async () => {
   <main class="container pt-4 pb-5 mb-5">
     <!-- Cabecera -->
     <div class="d-flex align-items-center mb-4 border-bottom pb-4">
-      <RouterLink v-if="projectId !== 'general'" :to="{ name: 'project-detail', params: { id: projectId } }" class="btn btn-outline-secondary me-3 shadow-sm rounded-circle">
+      <RouterLink v-if="projectId !== 'general'" :to="{ name: 'project-detail', params: { id: projectId } }" class="btn btn-outline-secondary me-3 shadow-sm rounded-circle" title="Volver al proyecto">
+        <i class="bi bi-arrow-left"></i>
+      </RouterLink>
+      <RouterLink v-else :to="{ name: 'forum-index' }" class="btn btn-outline-secondary me-3 shadow-sm rounded-circle" title="Volver a los foros">
         <i class="bi bi-arrow-left"></i>
       </RouterLink>
       <div>
@@ -192,64 +217,101 @@ onMounted(async () => {
 
     <template v-else>
       <!-- Mensajes -->
-      <div id="forum-messages" class="mb-5">
-        <div v-if="posts.length === 0" class="text-center py-5 text-muted border rounded shadow-sm bg-white">
-          <i class="bi bi-chat-left-dots display-1 d-block mb-4 text-light"></i>
+      <div id="forum-messages" class="mb-5 shadow-sm rounded-4 border overflow-hidden bg-white">
+        <div v-if="posts.length === 0" class="text-center py-5 text-muted bg-light">
+          <i class="bi bi-chat-left-dots display-1 d-block mb-4 text-secondary opacity-50"></i>
           <p class="lead fw-normal">No hay mensajes todavía en este hilo.</p>
           <p v-if="isMember" class="mb-0">¡Rompe el hielo y sé el primero en escribir!</p>
           <p v-else-if="projectId !== 'general'" class="mb-0">Solo los miembros del proyecto pueden escribir en el foro.</p>
         </div>
 
-        <div v-for="post in posts" :key="post.id" class="card mb-4 shadow rounded-3 forum-post-card border-0">
-          <div class="card-header bg-white py-3 border-bottom-0 pb-0 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }" class="text-decoration-none d-flex align-items-center text-dark forum-user-link">
-                <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
-                     :alt="post.userName"
-                     class="rounded-circle me-3 shadow-sm object-fit-cover"
-                     width="45" height="45" />
-                <div>
-                  <strong class="d-block" style="font-size: 1.1rem">{{ post.userName || 'Usuario' }}</strong>
-                  <small class="text-muted d-block text-start"><i class="bi bi-clock me-1"></i> {{ formatDate(post.createdAt) }}</small>
-                </div>
-              </RouterLink>
-            </div>
+        <div v-for="(post, index) in posts" :key="post.id" class="d-flex border-bottom forum-post-row" :class="{'bg-light': index % 2 !== 0}">
+          <!-- Columna de Usuario (Desktop) -->
+          <div class="user-column px-3 py-4 text-center border-end d-none d-md-block" style="width: 140px; flex-shrink: 0; background-color: rgba(0,0,0,0.015);">
+            <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }" class="text-decoration-none text-dark d-block forum-user-link">
+              <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
+                   :alt="post.userName"
+                   class="rounded-circle shadow-sm object-fit-cover mb-2 bg-white"
+                   width="56" height="56" />
+              <strong class="d-block text-truncate mb-1" style="font-size: 0.9rem;">{{ post.userName || 'Usuario' }}</strong>
+            </RouterLink>
+            <div v-if="project && post.userId === project.owner" class="badge bg-warning text-dark border border-warning-subtle rounded-pill mt-1 fw-bold" style="font-size: 0.70rem;">CREADOR</div>
+            <div v-else class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle rounded-pill mt-1 fw-normal" style="font-size: 0.70rem;">Miembro</div>
           </div>
           
-          <div class="card-body pt-3 pb-4 px-4">
-            <div v-if="post.replyToPostId" class="badge bg-light text-secondary mb-3 border py-2 px-3 fw-normal" style="font-size: 0.9rem">
-              <i class="bi bi-reply-fill me-1"></i> {{ findPostPrefix(post.replyToPostId) }}
+          <!-- Columna de Contenido -->
+          <div class="content-column p-4 flex-grow-1" style="min-width: 0;">
+            <!-- Header Móvil (solo visible en pantallas pequeñas) -->
+            <div class="d-flex justify-content-between align-items-center mb-3 d-md-none border-bottom pb-3">
+              <div class="d-flex align-items-center">
+                <RouterLink :to="{ name: 'user-detail', params: { id: post.userId } }">
+                  <img :src="post.userImage || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
+                       :alt="post.userName"
+                       class="rounded-circle me-3 shadow-sm object-fit-cover"
+                       width="40" height="40" />
+                </RouterLink>
+                <div>
+                  <strong class="d-block text-dark lh-sm" style="font-size: 0.95rem;">{{ post.userName || 'Usuario' }}</strong>
+                  <div class="d-flex align-items-center gap-2 mt-1">
+                    <span v-if="project && post.userId === project.owner" class="badge bg-warning text-dark rounded-pill fw-bold" style="font-size: 0.6rem;">CREADOR</span>
+                    <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i> {{ formatDate(post.createdAt) }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Header Contenido (Desktop) -->
+            <div class="d-none d-md-flex justify-content-between align-items-center mb-3 text-muted border-bottom pb-2" style="font-size: 0.85rem;">
+              <span><i class="bi bi-calendar3 me-1"></i> Publicado el {{ formatDate(post.createdAt) }}</span>
+              <span class="text-secondary fw-bold">#{{ index + 1 }}</span>
+            </div>
+            
+            <div v-if="post.replyToPostId" class="bg-light border-start border-3 border-info p-3 mb-3 rounded-end">
+              <div class="small fw-bold text-muted mb-1">
+                <i class="bi bi-reply-fill me-1"></i> Respondiendo a {{ getAnsweredPost(post.replyToPostId)?.userName || 'un mensaje anterior' }}:
+              </div>
+              <div class="small text-muted fst-italic" 
+                   style="display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap;">
+                {{ getAnsweredPost(post.replyToPostId)?.content || 'Mensaje no disponible.' }}
+              </div>
             </div>
             
             <div class="post-content" v-html="renderPostContent(post.content)"></div>
             
-            <div v-if="post.attachments?.length" class="mt-4 pt-3 border-top">
-              <h6 class="text-muted mb-3 small text-uppercase">Archivos adjuntos</h6>
-              <div class="d-flex flex-wrap gap-3">
+            <div v-if="post.attachments?.length" class="mt-4 pt-3 border-top border-light">
+              <h6 class="text-muted mb-3 small fw-bold text-uppercase"><i class="bi bi-paperclip me-1"></i> Archivos adjuntos</h6>
+              <div class="d-flex flex-wrap gap-2">
                 <div v-for="(att, i) in post.attachments" :key="i" class="attachment-preview shadow-sm rounded overflow-hidden border">
                   <template v-if="att.type === 'image'">
                     <a :href="att.url" target="_blank" title="Ver imagen completa">
-                      <img :src="att.url" :alt="att.name" class="img-fluid object-fit-cover" style="width: 140px; height: 140px;" />
+                      <img :src="att.url" :alt="att.name" class="img-fluid object-fit-cover" style="width: 120px; height: 120px;" />
                     </a>
                   </template>
                   <template v-else>
-                    <a :href="att.url" target="_blank" class="p-3 d-flex flex-column justify-content-center align-items-center bg-light text-decoration-none" style="width: 140px; height: 140px;">
-                      <i class="bi bi-file-earmark-text text-primary" style="font-size: 2.5rem;"></i>
-                      <div class="small text-truncate text-muted mt-2 w-100 text-center" :title="att.name">{{ att.name }}</div>
+                    <a :href="att.url" target="_blank"
+                       class="p-3 d-flex flex-column justify-content-center align-items-center bg-light text-decoration-none text-dark"
+                       style="width: 120px; height: 120px;">
+                      <i class="bi bi-file-earmark-text text-primary" style="font-size: 2rem;"></i>
+                      <div class="small text-truncate mt-2 w-100 text-center" :title="att.name" style="font-size: 0.75rem;">{{ att.name }}</div>
                     </a>
                   </template>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="card-footer bg-light border-top-0 d-flex justify-content-end py-2 px-4" v-if="isMember">
-            <button class="btn btn-link text-decoration-none text-secondary px-3" @click="initiateQuote(post)">
-              <i class="bi bi-quote fs-5"></i> Citar
-            </button>
-            <button class="btn btn-link text-decoration-none text-primary fw-bold" @click="initiateReply(post)">
-              <i class="bi bi-reply-fill fs-5"></i> Responder
-            </button>
+            
+            <div class="d-flex justify-content-between align-items-center pt-2 mt-3 mt-md-4 pt-md-0 d-md-flex text-md-end border-top" v-if="user">
+              <div>
+                <button class="btn btn-sm btn-link text-decoration-none px-2 text-muted" :class="{'text-danger': isPostLikedByUser(post)}" @click="toggleLike(post)" title="Me gusta">
+                  <i class="bi fs-5" :class="isPostLikedByUser(post) ? 'bi-heart-fill' : 'bi-heart'"></i>
+                  <span class="ms-1 fw-medium" v-if="post.likedBy?.length">{{ post.likedBy.length }}</span>
+                </button>
+              </div>
+              <div v-if="isMember">
+                <button class="btn btn-sm btn-light border text-muted px-3 rounded-pill" @click="initiateReply(post)" title="Responder">
+                  <i class="bi bi-reply-fill fs-5"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -263,11 +325,16 @@ onMounted(async () => {
             {{ errorMsg }}
           </div>
           
-          <div v-if="replyingTo" class="alert alert-info py-2 px-3 d-flex justify-content-between align-items-center mb-3">
-            <span>
-              <i class="bi bi-reply-fill"></i> Respondiendo a <strong>{{ replyingTo.userName }}</strong>
-            </span>
-            <button type="button" class="btn-close btn-sm" @click="replyingTo = null" title="Cancelar respuesta"></button>
+          <div v-if="replyingTo" class="alert alert-info py-2 px-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span>
+                <i class="bi bi-reply-fill"></i> Respondiendo a <strong>{{ replyingTo.userName }}</strong>
+              </span>
+              <button type="button" class="btn-close btn-sm" @click="replyingTo = null" title="Cancelar respuesta"></button>
+            </div>
+            <div class="bg-white bg-opacity-75 p-2 rounded text-muted small fst-italic border border-info border-opacity-25" style="max-height: 100px; overflow-y: auto; white-space: pre-wrap;">
+              {{ replyingTo.content }}
+            </div>
           </div>
 
           <form @submit.prevent="sendMessage">
@@ -290,7 +357,10 @@ onMounted(async () => {
                   <i class="bi bi-file-earmark fs-4"></i>
                   <span class="small text-truncate w-100 px-2 text-center" style="font-size: 0.65rem;">{{ att.name }}</span>
                 </div>
-                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle rounded-circle shadow" style="width: 24px; height: 24px; padding: 0" @click="removeAttachment(idx)">
+                <button type="button" 
+                        class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle rounded-circle shadow" 
+                        style="width: 24px; height: 24px; padding: 0" 
+                        @click="removeAttachment(idx)">
                   <i class="bi bi-x fs-6" style="line-height:0"></i>
                 </button>
               </div>
@@ -337,12 +407,16 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.forum-post-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.forum-post-row {
+  transition: background-color 0.2s ease;
 }
-.forum-post-card:hover {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
-  transform: translateY(-2px);
+.forum-post-row:hover {
+  background-color: #f8f9fa !important;
+}
+
+.hover-primary:hover {
+  color: #0d6efd !important;
+  border-color: #0d6efd !important;
 }
 
 .post-content {
