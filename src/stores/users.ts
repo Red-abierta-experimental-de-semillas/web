@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { type User } from '@/model/User'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/firebase/firebase'
 import { userService } from '@/services/userService'
 
@@ -25,6 +25,54 @@ export const useUsersStore = defineStore('users', {
         return result.user
       } catch (error) {
         console.error('Error during Google Sign-In:', error)
+        throw error
+      }
+    },
+
+    async signInWithEmail(email: string, password: string) {
+      try {
+        const result = await signInWithEmailAndPassword(auth, email, password)
+
+        if (!result.user.emailVerified) {
+          await signOut(getAuth())
+          throw new Error('email-not-verified')
+        }
+
+        const uid = result.user.uid
+
+        const token = await result.user.getIdToken()
+        localStorage.setItem('authToken', token)
+
+        await this.fetchCurrentUser(uid)
+        return result.user
+      } catch (error) {
+        console.error('Error during Email Sign-In:', error)
+        throw error
+      }
+    },
+
+    async registerWithEmail(email: string, password: string) {
+      try {
+        const result = await createUserWithEmailAndPassword(auth, email, password)
+
+        // Enviar correo de verificación
+        await sendEmailVerification(result.user)
+
+        // Cerrar sesión inmediatamente (debe verificar su email primero)
+        await signOut(getAuth())
+
+        return result.user
+      } catch (error) {
+        console.error('Error during Email Registration:', error)
+        throw error
+      }
+    },
+
+    async resetPassword(email: string) {
+      try {
+        await sendPasswordResetEmail(auth, email)
+      } catch (error) {
+        console.error('Error sending password reset email:', error)
         throw error
       }
     },
@@ -70,7 +118,7 @@ export const useUsersStore = defineStore('users', {
           location: this.user.location ?? undefined
         }
         if ((this.user as any).offer) {
-          ;(payload as any).offer = (this.user as any).offer
+          ; (payload as any).offer = (this.user as any).offer
         }
         if (this.user.experience === null) delete payload.experience
         if (this.user.interests === null) delete payload.interests
