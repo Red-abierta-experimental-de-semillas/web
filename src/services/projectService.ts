@@ -52,5 +52,10 @@ export const projectService = {
     async createDiscussionPost(projectId: string, content: string, userName: string, userImage: string, attachments?: any[], replyToPostId?: string): Promise<any> {
         const response = await api.post(`/projects/${projectId}/discussions`, { content, userName, userImage, attachments, replyToPostId })
         return response.data
+    },
+
+    async toggleDiscussionPostLike(projectId: string, postId: string): Promise<any> {
+        const response = await api.put(`/projects/${projectId}/discussions/${postId}/like`)
+        return response.data
     }
 }
