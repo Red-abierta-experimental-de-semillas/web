@@ -18,7 +18,7 @@ const handleSignOut = () => {
 </script>
 
 <template>
-  <header class="navbar fixed-top navbar-expand-lg bg-body-tertiary d-print-none">
+  <header class="navbar fixed-top navbar-expand-sm bg-body-tertiary d-print-none">
     <div class="container">
       <RouterLink :to="{ name: 'home' }" class="navbar-brand">
         <img class="bi me-2" height="32" src="@/assets/logo.svg"
@@ -31,13 +31,13 @@ const handleSignOut = () => {
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto" v-if="user">
-          <li class="nav-item me-lg-3 text-end">
+          <li class="nav-item me-sm-3 text-end">
             <RouterLink :to="{ name: 'home' }" class="nav-link">Proyectos</RouterLink>
           </li>
-          <li class="nav-item me-lg-3 text-end">
+          <li class="nav-item me-sm-3 text-end">
             <RouterLink :to="{ name: 'forum-index' }" class="nav-link">Foros</RouterLink>
           </li>
-          <li class="nav-item me-lg-3 text-end">
+          <li class="nav-item me-sm-3 text-end">
             <RouterLink :to="{ name: 'what-is-this' }" class="nav-link">¿Qué es?</RouterLink>
           </li>
           <li class="nav-item text-end dropdown">
@@ -64,13 +64,13 @@ const handleSignOut = () => {
           </li>
         </ul>
         <ul class="navbar-nav ms-auto" v-else>
-          <li class="nav-item me-lg-2 text-end">
+          <li class="nav-item me-sm-2 text-end">
             <RouterLink :to="{ name: 'home' }" class="nav-link">Proyectos</RouterLink>
           </li>
-          <li class="nav-item me-lg-2 text-end">
+          <li class="nav-item me-sm-2 text-end">
             <RouterLink :to="{ name: 'forum-index' }" class="nav-link">Foros</RouterLink>
           </li>
-          <li class="nav-item me-lg-2 text-end">
+          <li class="nav-item me-sm-2 text-end">
             <RouterLink :to="{ name: 'what-is-this' }" class="nav-link">¿Qué es?</RouterLink>
           </li>
           <li>
