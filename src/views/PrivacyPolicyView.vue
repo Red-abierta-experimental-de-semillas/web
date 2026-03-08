@@ -89,7 +89,7 @@
     <p>Si tiene alguna pregunta o inquietud sobre esta Política de Privacidad o sobre cómo manejamos su información
       personal, por favor contáctenos en:</p>
     <ul>
-      <li><strong>Correo electrónico:</strong> <a href="mailto:info@red-experimental-semillas.web.app">info@red-experimental-semillas.web.app</a>
+      <li><strong>Correo electrónico:</strong> <a href="mailto:redexperimentaldesemillas@gmail.com">redexperimentaldesemillas@gmail.com</a>
       </li>
     </ul>
   </div>
