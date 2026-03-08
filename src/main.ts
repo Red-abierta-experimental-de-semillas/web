@@ -7,8 +7,7 @@ import VueGtag from 'vue-gtag'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import {Tooltip} from "bootstrap";
+import * as bootstrap from 'bootstrap';
 
 const app = createApp(App)
 
@@ -22,7 +21,7 @@ app.use(VueGtag, {
 
 app.directive('tooltip', {
     mounted: (el, binding) => {
-        new Tooltip(el, {
+        new bootstrap.Tooltip(el, {
             placement: 'top',
             title: binding.value
         });

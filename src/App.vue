@@ -32,7 +32,7 @@ getCurrentUser()
 </script>
 <template>
   <AppHeader />
-  <RouterView style="margin-top: 60px" class="mb-5" />
+  <RouterView style="margin-top: 140px" class="mb-5" />
   <AppFooter />
   <CookiesModal />
   <NotificationToasts />
