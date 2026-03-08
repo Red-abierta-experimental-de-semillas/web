@@ -126,8 +126,9 @@ const modalTitle = computed(() => {
           <div v-if="viewMode !== 'reset'">
             <hr class="my-4">
             <div class="d-grid gap-2">
-              <button class="btn btn-outline-secondary" type="button" @click="signInWithGoogle">
-                <i class="bi bi-google me-1"></i> Continuar con Google
+              <button class="btn btn-google" type="button" @click="signInWithGoogle">
+                <img src="@/assets/google-icon.svg" width="20" height="20" alt="Google logo" class="me-2" />
+                Inicia sesión con Google
               </button>
             </div>
           </div>
@@ -137,3 +138,21 @@ const modalTitle = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.btn-google {
+  background-color: #ffffff;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-google:hover {
+  background-color: #f8f9fa;
+  color: #3c4043;
+  border-color: #d2e3fc;
+}
+
+</style>
