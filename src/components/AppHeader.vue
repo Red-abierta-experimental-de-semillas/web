@@ -3,6 +3,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import LoginModal from '@/components/modals/LoginModal.vue'
 import { useUsersStore } from '@/stores/users'
 import { storeToRefs } from 'pinia'
+import { watch } from 'vue'
 
 const router = useRouter()
 
@@ -14,6 +15,18 @@ const handleSignOut = () => {
     router.push('/')
   }).catch(console.error)
 }
+
+// Cierra el menú en móvil al cambiar de ruta
+watch(
+  () => router.currentRoute.value.path,
+  () => {
+    const navbarCollapse = document.getElementById('navbarSupportedContent')
+    if (navbarCollapse?.classList.contains('show')) {
+      const toggler = document.querySelector('.navbar-toggler') as HTMLElement
+      if (toggler) toggler.click()
+    }
+  }
+)
 
 </script>
 
@@ -35,42 +48,41 @@ const handleSignOut = () => {
     <nav class="navbar navbar-expand-sm py-2">
       <div class="container">
         <!-- Toggler for mobile -->
-        <button class="navbar-toggler border-0 px-0 ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-            <li class="nav-item me-sm-3">
+            <li class="nav-item me-sm-3 text-end">
               <RouterLink :to="{ name: 'home' }" class="nav-link fs-6">Proyectos</RouterLink>
             </li>
-            <li class="nav-item me-sm-3">
+            <li class="nav-item me-sm-3 text-end">
               <RouterLink :to="{ name: 'forum-index' }" class="nav-link fs-6">Foros</RouterLink>
             </li>
-            <li class="nav-item me-sm-3">
+            <li class="nav-item me-sm-3 text-end">
               <RouterLink :to="{ name: 'what-is-this' }" class="nav-link fs-6">¿Qué es?</RouterLink>
             </li>
           </ul>
 
           <ul class="navbar-nav ms-auto" v-if="user">
             <!-- Dropdown right-aligned on desktop -->
-            <li class="nav-item dropdown text-sm-end">
-              <button class="btn btn-sm dropdown-toggle border-0 bg-transparent px-0" data-bs-toggle="dropdown"
-                      aria-expanded="false" aria-label="User Menu">
+            <li class="nav-item text-end dropdown">
+              <button class="btn btn-sm dropdown-toggle position-relative" data-bs-toggle="dropdown"
+                      aria-expanded="false">
                 <img :src="user.image" alt="your user profile photo" width="32" height="32" class="rounded-circle">
-                <span class="ms-2 d-sm-none text-dark">{{ user.name || 'Mi Perfil' }}</span>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end shadow mt-2">
+              <ul class="dropdown-menu shadow" style="position: absolute; inset: 0 0 auto auto; transform: translate(0px, 40px)">
                 <li>
                   <RouterLink :to="{ name: 'profile' }" class="dropdown-item">
-                    <i class="bi bi-person me-2" /> Editar perfil
+                    <i class="bi bi-person" /> Editar perfil
                   </RouterLink>
                 </li>
                 <li class="dropdown-divider"></li>
                 <li>
                   <button class="dropdown-item" @click="handleSignOut">
-                    <i class="bi bi-box-arrow-right me-2" /> Cerrar sesión
+                    <i class="bi bi-arrow-bar-right" /> Cerrar sesión
                   </button>
                 </li>
               </ul>
@@ -78,9 +90,9 @@ const handleSignOut = () => {
           </ul>
           
           <ul class="navbar-nav ms-auto" v-else>
-            <li class="nav-item">
+            <li class="nav-item text-end">
               <a class="btn btn-outline-dark" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
               </a>
             </li>
           </ul>
