@@ -23,7 +23,7 @@ const handleSignOut = () => {
       <RouterLink :to="{ name: 'home' }" class="navbar-brand">
         <img class="bi me-2" height="32" src="@/assets/logo.svg"
              alt="Logo de la Red Abierta Experimental de Semillas" />
-        <b class="navbar-brand-text">RAES</b>
+        <b class="navbar-brand-text">Red Abierta Experimental de Semillas</b>
       </RouterLink>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
