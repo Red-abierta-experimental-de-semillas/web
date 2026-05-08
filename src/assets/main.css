@@ -1,0 +1,178 @@
+@font-face {
+  font-family: 'Josefin Slab';
+  src: url('@/assets/fonts/JosefinSlab-VariableFont_wght.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto Light';
+  src: url('@/assets/fonts/Roboto-Light.ttf') format('truetype');
+  font-display: swap;
+}
+
+:root {
+  --raes-ink: #172018;
+  --raes-muted: #617064;
+  --raes-green: #2f6b3f;
+  --raes-green-dark: #1f4a2d;
+  --raes-green-soft: #e8f3dc;
+  --raes-lime: #b7d36b;
+  --raes-clay: #c47646;
+  --raes-sand: #f7f1e4;
+  --raes-cream: #fffaf0;
+  --raes-card: rgba(255, 255, 255, 0.78);
+  --raes-border: rgba(47, 107, 63, 0.14);
+  --raes-shadow: 0 22px 70px rgba(31, 74, 45, 0.14);
+  --bs-primary: var(--raes-green);
+  --bs-primary-rgb: 47, 107, 63;
+  --bs-link-color: var(--raes-green-dark);
+  --bs-link-hover-color: var(--raes-clay);
+  --bs-body-color: var(--raes-ink);
+  --bs-body-bg: var(--raes-cream);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--raes-ink);
+  background:
+    radial-gradient(circle at top left, rgba(183, 211, 107, 0.36), transparent 30rem),
+    radial-gradient(circle at 85% 10%, rgba(196, 118, 70, 0.17), transparent 24rem),
+    linear-gradient(180deg, #fffaf0 0%, #f6f0df 52%, #edf4e7 100%);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image:
+    linear-gradient(rgba(47, 107, 63, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 107, 63, 0.05) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 75%);
+  z-index: -1;
+}
+
+h1, h2, h3, h4, .brand-title {
+  letter-spacing: -0.035em;
+}
+
+img { max-width: 100%; }
+
+.raes-page {
+  padding-top: 8.25rem;
+  padding-bottom: 3rem;
+}
+
+.raes-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.glass-panel,
+.card,
+.dropdown-menu,
+.modal-content {
+  border: 1px solid var(--raes-border) !important;
+  background: var(--raes-card);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--raes-shadow);
+}
+
+.card,
+.modal-content,
+.dropdown-menu,
+.form-control,
+.form-select,
+.btn {
+  border-radius: 1.1rem;
+}
+
+.form-control,
+.form-select {
+  border-color: rgba(47, 107, 63, 0.18);
+  background-color: rgba(255, 255, 255, 0.86);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(47, 107, 63, 0.55);
+  box-shadow: 0 0 0 0.25rem rgba(47, 107, 63, 0.12);
+}
+
+.btn {
+  font-weight: 700;
+  border-width: 1px;
+}
+
+.btn-primary,
+.btn-success {
+  border-color: var(--raes-green);
+  background: linear-gradient(135deg, var(--raes-green), var(--raes-green-dark));
+  box-shadow: 0 12px 26px rgba(47, 107, 63, 0.22);
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  border-color: var(--raes-green-dark);
+  background: linear-gradient(135deg, #3b7d4d, var(--raes-green-dark));
+  transform: translateY(-1px);
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-dark {
+  color: var(--raes-green-dark);
+  border-color: rgba(47, 107, 63, 0.28);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-dark:hover {
+  color: #fff;
+  border-color: var(--raes-green);
+  background: var(--raes-green);
+}
+
+.badge {
+  border-radius: 999px;
+  padding: 0.5em 0.72em;
+  font-weight: 700;
+}
+
+.text-bg-light {
+  color: var(--raes-green-dark) !important;
+  background-color: rgba(232, 243, 220, 0.82) !important;
+  border: 1px solid rgba(47, 107, 63, 0.1);
+}
+
+.router-link-active:not(.navbar-brand) {
+  color: var(--raes-green-dark) !important;
+}
+
+@media (max-width: 767.98px) {
+  .raes-page {
+    padding-top: 5.75rem;
+  }
+
+  .raes-shell {
+    width: min(100% - 1rem, 1120px);
+  }
+
+  .card,
+  .modal-content,
+  .dropdown-menu,
+  .form-control,
+  .form-select,
+  .btn {
+    border-radius: 0.9rem;
+  }
+}

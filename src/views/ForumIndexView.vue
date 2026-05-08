@@ -11,16 +11,15 @@ const postCounts = ref<Record<string, number>>({})
 onMounted(async () => {
   await projectStore.fetch()
   const projs = projectStore.projects || []
-  
-  // Load post counts
+
   try {
     const promises = [
       projectService.getDiscussionPosts('general').then(posts => {
         postCounts.value['general'] = posts.length
       }),
-      ...projs.map(p => 
-        projectService.getDiscussionPosts(p.id).then(posts => { 
-          postCounts.value[p.id] = posts.length 
+      ...projs.map(p =>
+        projectService.getDiscussionPosts(p.id).then(posts => {
+          postCounts.value[p.id] = posts.length
         })
       )
     ]
@@ -28,120 +27,384 @@ onMounted(async () => {
   } catch (e) {
     console.error(e)
   }
-  
+
   isLoading.value = false
 })
 
 const projects = computed(() => projectStore.projects || [])
+const totalMessages = computed(() => Object.values(postCounts.value).reduce((sum, count) => sum + count, 0))
 
 function formatDate(dateStr: string) {
   if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('es-ES', { 
+  return new Date(dateStr).toLocaleDateString('es-ES', {
     day: 'numeric', month: 'short', year: 'numeric'
   })
 }
 </script>
 
 <template>
-  <main class="container pt-4 pb-5 mb-5">
-    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
-      <h2 class="mb-0 fw-bold text-dark d-flex align-items-center">
-        <i class="bi bi-chat-square-text text-primary me-3 fs-3"></i> Foros de la Comunidad
-      </h2>
-    </div>
-
-    <!-- Loading -->
-    <div v-if="isLoading" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status"></div>
-      <p class="mt-3 text-muted">Cargando temas...</p>
-    </div>
-
-    <template v-else>
-      <div class="row">
-        <div class="col-12">
-          <!-- Categoría General -->
-          <div class="card shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
-            <div class="card-header bg-dark text-white py-3 fw-bold d-flex align-items-center fs-5">
-              <i class="bi bi-globe me-2 text-info"></i> General
-            </div>
-            <div class="list-group list-group-flush">
-              <RouterLink :to="{ name: 'forum-general' }" class="list-group-item list-group-item-action py-4 px-4 d-flex align-items-center border-bottom-0">
-                <div class="forum-icon bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 56px; height: 56px;">
-                  <i class="bi bi-chat-dots fs-3"></i>
-                </div>
-                <div class="flex-grow-1">
-                  <h4 class="mb-1 text-dark fw-bold forum-title">Discusión General</h4>
-                  <p class="mb-0 text-muted">Espacio abierto para toda la comunidad y temas no relacionados a un proyecto específico.</p>
-                </div>
-                <div class="text-end text-muted d-none d-md-flex flex-column align-items-end ms-3" style="min-width: 140px;">
-                  <span class="badge bg-primary rounded-pill mb-2 px-3 py-2"><i class="bi bi-people me-1"></i> Público</span>
-                  <small class="d-block text-muted">
-                    <i class="bi bi-chat-left-text me-1"></i> 
-                    {{ postCounts['general'] || 0 }} {{ postCounts['general'] === 1 ? 'mensaje' : 'mensajes' }}
-                  </small>
-                </div>
-              </RouterLink>
-            </div>
-          </div>
-
-          <!-- Categoría Proyectos -->
-          <div class="card shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
-            <div class="card-header bg-dark text-white py-3 fw-bold d-flex align-items-center fs-5">
-              <i class="bi bi-boxes me-2 text-warning"></i> Foros por Proyecto
-            </div>
-            <div class="list-group list-group-flush" v-if="projects.length > 0">
-              <RouterLink 
-                v-for="(project, index) in projects" 
-                :key="project.id" 
-                :to="{ name: 'project-forum', params: { id: project.id } }" 
-                class="list-group-item list-group-item-action py-4 px-4 d-flex align-items-center" 
-                :class="{ 'border-bottom-0': index === projects.length - 1 }">
-                <div class="forum-icon me-4 position-relative">
-                  <img v-if="project.image" :src="project.image" class="rounded-3 shadow-sm object-fit-cover" style="width: 56px; height: 56px;" :alt="project.title" />
-                  <div v-else class="bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 56px; height: 56px;">
-                    <i class="bi bi-image fs-3"></i>
-                  </div>
-                  <div v-if="project.status === 'CLOSED'" class="position-absolute top-100 start-50 translate-middle badge bg-danger rounded-pill" style="font-size: 0.6rem;">Cerrado</div>
-                </div>
-                <div class="flex-grow-1">
-                  <h4 class="mb-1 text-dark fw-bold forum-title">{{ project.title }}</h4>
-                  <p class="mb-0 text-muted text-truncate" style="max-width: 500px;">{{ project.description }}</p>
-                </div>
-                <div class="text-end text-muted d-none d-lg-flex flex-column align-items-end ms-3" style="min-width: 150px;">
-                  <span class="badge bg-light border text-dark mb-2 px-3 py-2 text-truncate" style="max-width: 150px;">{{ project.category || 'Proyecto' }}</span>
-                  <small class="d-block text-muted mb-1 fw-bold">
-                    <i class="bi bi-chat-left-text me-1"></i> {{ postCounts[project.id] || 0 }} {{ postCounts[project.id] === 1 ? 'mensaje' : 'mensajes' }}
-                  </small>
-                  <small class="d-block text-muted" style="font-size: 0.75rem;">Creado el {{ formatDate(project.createdAt) }}</small>
-                </div>
-              </RouterLink>
-            </div>
-            <div class="card-body text-center text-muted py-5" v-else>
-              <i class="bi bi-box-seam display-4 d-block mb-3 text-light"></i>
-              <p class="mb-0">No hay proyectos disponibles en este momento.</p>
-            </div>
-          </div>
+  <main>
+    <section class="forum-hero">
+      <div class="raes-shell forum-hero-grid">
+        <div>
+          <RouterLink :to="{ name: 'home' }" class="back-link">
+            <i class="bi bi-arrow-left"></i> Volver a proyectos
+          </RouterLink>
+          <span class="eyebrow"><i class="bi bi-chat-square-heart me-2"></i>Comunidad RAES</span>
+          <h1>Foros para pensar, preguntar y documentar sin perder el hilo.</h1>
+          <p>Un espacio común y foros por proyecto para coordinar experimentos, compartir avances y resolver dudas.</p>
         </div>
+        <aside class="forum-stats glass-panel">
+          <div>
+            <strong>{{ projects.length }}</strong>
+            <span>foros de proyecto</span>
+          </div>
+          <div>
+            <strong>{{ totalMessages }}</strong>
+            <span>mensajes publicados</span>
+          </div>
+        </aside>
       </div>
-    </template>
+    </section>
+
+    <section class="raes-shell forum-board">
+      <div v-if="isLoading" class="loading-state glass-panel">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p>Cargando temas...</p>
+      </div>
+
+      <template v-else>
+        <RouterLink :to="{ name: 'forum-general' }" class="forum-feature-card glass-panel">
+          <div class="feature-icon"><i class="bi bi-globe2"></i></div>
+          <div>
+            <span class="eyebrow">Foro público</span>
+            <h2>Discusión general</h2>
+            <p>Conversaciones abiertas para toda la comunidad y temas que no pertenecen a un proyecto concreto.</p>
+          </div>
+          <div class="feature-meta">
+            <span class="badge text-bg-light"><i class="bi bi-people me-1"></i>Público</span>
+            <strong>{{ postCounts['general'] || 0 }}</strong>
+            <small>{{ postCounts['general'] === 1 ? 'mensaje' : 'mensajes' }}</small>
+          </div>
+        </RouterLink>
+
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Conversaciones por experimento</span>
+            <h2>Foros por proyecto</h2>
+          </div>
+          <span class="counter-pill">{{ projects.length }} proyectos</span>
+        </div>
+
+        <div class="project-forum-grid" v-if="projects.length > 0">
+          <RouterLink
+            v-for="project in projects"
+            :key="project.id"
+            :to="{ name: 'project-forum', params: { id: project.id } }"
+            class="project-forum-card card"
+          >
+            <div class="project-cover">
+              <img v-if="project.image" :src="project.image" :alt="project.title" />
+              <div v-else class="project-placeholder"><i class="bi bi-image"></i></div>
+              <span v-if="project.status === 'CLOSED'" class="closed-chip">Cerrado</span>
+            </div>
+            <div class="project-forum-body">
+              <div class="card-meta">
+                <span class="badge text-bg-light">{{ project.category || 'Proyecto' }}</span>
+                <span><i class="bi bi-chat-left-text me-1"></i>{{ postCounts[project.id] || 0 }}</span>
+              </div>
+              <h3>{{ project.title }}</h3>
+              <p>{{ project.description }}</p>
+              <small><i class="bi bi-calendar3 me-1"></i>Creado el {{ formatDate(project.createdAt) }}</small>
+            </div>
+          </RouterLink>
+        </div>
+
+        <div class="empty-state glass-panel" v-else>
+          <i class="bi bi-box-seam"></i>
+          <h2>No hay proyectos disponibles</h2>
+          <p>Cuando haya proyectos, sus foros aparecerán aquí.</p>
+        </div>
+      </template>
+    </section>
   </main>
 </template>
 
 <style scoped>
-.forum-icon {
-  flex-shrink: 0;
+.forum-hero {
+  padding: 1.25rem 0 2rem;
 }
-.list-group-item-action {
-  transition: all 0.2s ease;
+
+.forum-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 2rem;
+  align-items: end;
 }
-.list-group-item-action:hover {
-  background-color: #f8f9fa;
-  transform: translateX(4px);
+
+.back-link {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  color: var(--raes-muted);
+  font-weight: 900;
+  text-decoration: none;
 }
-.forum-title {
-  transition: color 0.15s ease-in-out;
+
+.back-link:hover { color: var(--raes-green-dark); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  color: var(--raes-green-dark);
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-.list-group-item-action:hover .forum-title {
-  color: #0d6efd !important;
+
+.forum-hero h1 {
+  max-width: 860px;
+  margin: 0.8rem 0 1rem;
+  font-size: clamp(2.35rem, 6vw, 5rem);
+  font-weight: 950;
+  line-height: 0.95;
+}
+
+.forum-hero p {
+  max-width: 720px;
+  color: var(--raes-muted);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.forum-stats {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 1.65rem;
+}
+
+.forum-stats div {
+  padding: 1rem;
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.forum-stats strong {
+  display: block;
+  color: var(--raes-green-dark);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.forum-stats span {
+  color: var(--raes-muted);
+  font-weight: 900;
+}
+
+.forum-board {
+  padding-bottom: 2rem;
+}
+
+.loading-state,
+.empty-state {
+  padding: 4rem 1.5rem;
+  text-align: center;
+  border-radius: 2rem;
+}
+
+.loading-state p,
+.empty-state p { color: var(--raes-muted); margin: 1rem 0 0; }
+.empty-state i { color: var(--raes-green); font-size: 3rem; }
+
+.forum-feature-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.3rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 1.8rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.forum-feature-card:hover,
+.project-forum-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 28px 80px rgba(31, 74, 45, 0.18);
+}
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+  width: 4.6rem;
+  height: 4.6rem;
+  color: var(--raes-green-dark);
+  border-radius: 1.45rem;
+  background: linear-gradient(145deg, #fff, var(--raes-green-soft));
+  font-size: 2rem;
+}
+
+.forum-feature-card h2,
+.section-heading h2,
+.empty-state h2 {
+  margin: 0.2rem 0;
+  font-weight: 950;
+}
+
+.forum-feature-card p {
+  margin: 0;
+  color: var(--raes-muted);
+  line-height: 1.55;
+}
+
+.feature-meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.25rem;
+  color: var(--raes-muted);
+}
+
+.feature-meta strong {
+  color: var(--raes-green-dark);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin: 2.2rem 0 1rem;
+}
+
+.counter-pill {
+  padding: 0.65rem 0.9rem;
+  color: var(--raes-green-dark);
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(232, 243, 220, 0.9);
+}
+
+.project-forum-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.project-forum-card {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 1.55rem;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.project-cover {
+  position: relative;
+  min-height: 210px;
+  background: var(--raes-green-soft);
+}
+
+.project-cover img,
+.project-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--raes-green-dark);
+  font-size: 2rem;
+}
+
+.closed-chip {
+  position: absolute;
+  left: 0.8rem;
+  bottom: 0.8rem;
+  padding: 0.35rem 0.65rem;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 900;
+  border-radius: 999px;
+  background: #9b2c2c;
+}
+
+.project-forum-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 1.1rem;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  color: var(--raes-muted);
+  font-weight: 900;
+  margin-bottom: 0.75rem;
+}
+
+.project-forum-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 950;
+  line-height: 1.12;
+}
+
+.project-forum-body p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0.7rem 0 1rem;
+  color: var(--raes-muted);
+  line-height: 1.55;
+}
+
+.project-forum-body small {
+  margin-top: auto;
+  color: var(--raes-muted);
+  font-weight: 800;
+}
+
+@media (max-width: 1000px) {
+  .forum-hero-grid,
+  .project-forum-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .forum-feature-card,
+  .section-heading,
+  .project-forum-card {
+    grid-template-columns: 1fr;
+  }
+
+  .forum-feature-card {
+    align-items: start;
+  }
+
+  .feature-meta {
+    justify-items: start;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+  }
+
+  .project-cover {
+    min-height: 190px;
+  }
 }
 </style>
