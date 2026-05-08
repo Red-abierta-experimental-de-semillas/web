@@ -1,3 +1,9 @@
+export type EmailNotificationPreferences = {
+  notifyForumPosts: boolean
+  notifyNewProjects: boolean
+  notifyProjectUpdates: boolean
+}
+
 export type User = {
   id: string
   name: string
@@ -8,4 +14,5 @@ export type User = {
   interests: string | null
   location: string | null
   email: string | null
+  emailNotifications: EmailNotificationPreferences
 }
