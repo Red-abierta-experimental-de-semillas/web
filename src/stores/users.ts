@@ -115,7 +115,8 @@ export const useUsersStore = defineStore('users', {
           want: this.user.want,
           experience: this.user.experience ?? undefined,
           interests: this.user.interests ?? undefined,
-          location: this.user.location ?? undefined
+          location: this.user.location ?? undefined,
+          emailNotifications: this.user.emailNotifications
         }
         if ((this.user as any).offer) {
           ; (payload as any).offer = (this.user as any).offer

@@ -1,3 +1,5 @@
+import type { EmailNotificationPreferences } from '@/model/User'
+
 export type UpdateUserDto = {
   name?: string
   image?: string
@@ -7,4 +9,5 @@ export type UpdateUserDto = {
   experience?: string
   interests?: string
   location?: string
+  emailNotifications?: Partial<EmailNotificationPreferences>
 }
