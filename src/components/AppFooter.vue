@@ -3,26 +3,77 @@ import {RouterLink} from 'vue-router'
 </script>
 
 <template>
-  <footer
-      class="bg-body py-3 px-5 border-top d-print-none">
-    <div class="container d-flex flex-wrap justify-content-between align-items-center">
-      <p class="col-md-auto mb-0 text-muted">© 2025 Red Abierta Experimental de Semillas</p>
-      <ul class="nav col-md-auto justify-content-end">
-        <li class="nav-item">
-          <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'home' }">Inicio</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'cookies-policy' }">Política de cookies</RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'privacy-policy' }">Política de privacidad
-          </RouterLink>
-        </li>
-        <li class="nav-item">
-          <RouterLink class="nav-link px-2 text-muted" :to="{ name: 'terms-of-service' }">Términos de servicio</RouterLink>
-        </li>
-      </ul>
+  <footer class="raes-footer d-print-none">
+    <div class="raes-shell footer-grid">
+      <div>
+        <RouterLink :to="{ name: 'home' }" class="footer-brand">Red Abierta Experimental de Semillas</RouterLink>
+        <p>© 2025 · Investigación agrícola abierta, colaborativa y un poco más bonita.</p>
+      </div>
+      <nav class="footer-links" aria-label="Enlaces legales">
+        <RouterLink :to="{ name: 'home' }">Inicio</RouterLink>
+        <RouterLink :to="{ name: 'cookies-policy' }">Cookies</RouterLink>
+        <RouterLink :to="{ name: 'privacy-policy' }">Privacidad</RouterLink>
+        <RouterLink :to="{ name: 'terms-of-service' }">Términos</RouterLink>
+      </nav>
     </div>
   </footer>
-
 </template>
+
+<style scoped>
+.raes-footer {
+  margin-top: 2rem;
+  padding: 2.2rem 0;
+  border-top: 1px solid rgba(47, 107, 63, 0.12);
+  background: rgba(255, 250, 240, 0.55);
+  backdrop-filter: blur(16px);
+}
+
+.footer-grid {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand {
+  color: var(--raes-ink);
+  font-weight: 950;
+  text-decoration: none;
+}
+
+p {
+  margin: 0.35rem 0 0;
+  color: var(--raes-muted);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.footer-links a {
+  padding: 0.5rem 0.7rem;
+  color: var(--raes-muted);
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.footer-links a:hover {
+  color: var(--raes-green-dark);
+  background: rgba(232, 243, 220, 0.78);
+}
+
+@media (max-width: 767.98px) {
+  .footer-grid {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+  }
+}
+</style>

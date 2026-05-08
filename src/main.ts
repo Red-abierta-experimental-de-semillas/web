@@ -7,6 +7,7 @@ import VueGtag from 'vue-gtag'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import '@/assets/main.css'
 import * as bootstrap from 'bootstrap';
 
 const app = createApp(App)
