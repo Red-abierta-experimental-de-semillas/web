@@ -4,12 +4,15 @@ import { useProjectStore } from '@/stores/project'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users'
 import { PROJECT_CATEGORIES } from '@/model/Project'
+import { computed } from 'vue'
 
 const userStore = useUsersStore()
 const { user } = storeToRefs(userStore)
 
 const projectStore = useProjectStore()
 const { isLoading, getProjects, filters } = storeToRefs(projectStore)
+
+const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 </script>
 
@@ -21,12 +24,15 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
           <span class="eyebrow"><i class="bi bi-stars me-2"></i>Investigación abierta y viva</span>
           <h1>Proyectos con semillas, abiertos y compartidos.</h1>
           <p>
-            Una red para compartir proyectos con semillas, encontrar colaboración y guardar lo aprendido en el campo.
+            Encuentra ensayos abiertos, únete como voluntario o publica tu propio proyecto.
           </p>
           <div class="hero-actions">
-            <a href="#projects" class="btn btn-primary btn-lg">
-              Explorar proyectos <i class="bi bi-arrow-down-short ms-1"></i>
+            <a href="#featured" class="btn btn-primary btn-lg">
+              Ver proyectos destacados <i class="bi bi-arrow-down-short ms-1"></i>
             </a>
+            <RouterLink :to="{ name: 'how-it-works' }" class="btn btn-outline-primary btn-lg">
+              Cómo funciona
+            </RouterLink>
             <RouterLink :to="{ name: 'project-new' }" class="btn btn-outline-primary btn-lg" v-if="user">
               Crear proyecto
             </RouterLink>
@@ -56,6 +62,61 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="raes-shell how-panel">
+      <div class="section-heading centered">
+        <span class="eyebrow">Cómo funciona</span>
+        <h2>Participar es sencillo</h2>
+      </div>
+      <div class="steps-grid">
+        <a href="#projects" class="step-card glass-panel">
+          <span>1</span>
+          <h3>Encuentra un proyecto</h3>
+          <p>Busca cultivos, zonas o temas que te interesen.</p>
+        </a>
+        <div class="step-card glass-panel">
+          <span>2</span>
+          <h3>Pide unirte</h3>
+          <p>Envía una solicitud al creador y cuenta cómo puedes participar.</p>
+        </div>
+        <div class="step-card glass-panel">
+          <span>3</span>
+          <h3>Cultiva y observa</h3>
+          <p>Prueba en tu huerto, finca o espacio de cultivo.</p>
+        </div>
+        <RouterLink :to="{ name: 'forum-index' }" class="step-card glass-panel">
+          <span>4</span>
+          <h3>Comparte avances</h3>
+          <p>Usa el foro del proyecto para dejar dudas, fotos y resultados.</p>
+        </RouterLink>
+      </div>
+    </section>
+
+    <section class="raes-shell featured-panel" id="featured" v-if="featuredProjects.length > 0">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Proyectos destacados</span>
+          <h2>Empieza por aquí</h2>
+        </div>
+        <a href="#projects" class="btn btn-outline-primary">Ver todos</a>
+      </div>
+      <div class="featured-grid">
+        <RouterLink
+          v-for="project in featuredProjects"
+          :key="project.id"
+          :to="{ name: 'project-detail', params: { id: project.id } }"
+          class="featured-card glass-panel"
+        >
+          <img :src="project.image" :alt="project.title" />
+          <div>
+            <span class="badge text-bg-light">{{ project.category || 'Proyecto' }}</span>
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.location || 'Ubicación abierta' }}</p>
+            <strong>Ver proyecto <i class="bi bi-arrow-right-short"></i></strong>
+          </div>
+        </RouterLink>
       </div>
     </section>
 
@@ -292,8 +353,94 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
   margin-left: auto;
 }
 
+.how-panel,
+.featured-panel,
 .projects-panel {
   padding-bottom: 2rem;
+}
+
+.section-heading.centered {
+  display: block;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 1rem;
+}
+
+.section-heading h2,
+.centered h2 {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 950;
+}
+
+.steps-grid,
+.featured-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.steps-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.step-card {
+  display: block;
+  min-height: 100%;
+  padding: 1.2rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 1.35rem;
+}
+
+.step-card span {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-bottom: 1rem;
+  color: #fff;
+  font-weight: 950;
+  border-radius: 999px;
+  background: var(--raes-green-dark);
+}
+
+.step-card h3,
+.featured-card h3 {
+  font-weight: 950;
+}
+
+.step-card p,
+.featured-card p {
+  color: var(--raes-muted);
+}
+
+.featured-panel {
+  scroll-margin-top: 7rem;
+}
+
+.featured-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.featured-card {
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 1.5rem;
+}
+
+.featured-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.featured-card div {
+  padding: 1rem;
+}
+
+.featured-card strong {
+  color: var(--raes-green-dark);
 }
 
 .search-panel {
@@ -390,6 +537,11 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
   .hero-card {
     min-height: auto;
   }
+
+  .steps-grid,
+  .featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -403,6 +555,15 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
 
   .hero-actions .btn {
     width: 100%;
+  }
+
+  .steps-grid,
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-card img {
+    height: 160px;
   }
 
   .search-panel {
