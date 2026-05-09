@@ -8,7 +8,7 @@
       <span class="eyebrow">Cómo funciona RAES</span>
       <h1>De una idea a un ensayo compartido.</h1>
       <p>
-        RAES conecta a personas que quieren probar, conservar o mejorar semillas en condiciones reales.
+        RAES conecta a personas que quieren probar, conservar, mejorar y compartir semillas en condiciones reales.
       </p>
     </section>
 
@@ -21,24 +21,24 @@
       <article>
         <span>2</span>
         <h2>Pide unirte</h2>
-        <p>Envía una solicitud al creador. Puedes contar dónde cultivas, qué experiencia tienes o qué puedes aportar.</p>
+        <p>Envía una solicitud al creador. Participar puede significar aportar semillas, recibirlas o ayudar a multiplicarlas.</p>
       </article>
       <article>
         <span>3</span>
-        <h2>Cultiva y observa</h2>
-        <p>Participa desde tu huerto, finca, terraza o asociación. Lo importante es observar bien y compartir datos útiles.</p>
+        <h2>Cultiva, observa y guarda semillas</h2>
+        <p>Participa desde tu huerto, finca, terraza o asociación. Observa bien y conserva semillas cuando el proyecto lo plantee.</p>
       </article>
       <article>
         <span>4</span>
-        <h2>Comparte resultados</h2>
-        <p>Usa el foro del proyecto para subir avances, dudas, fotos y conclusiones. Así el aprendizaje no se pierde.</p>
+        <h2>Comparte semillas y resultados</h2>
+        <p>Usa el foro para avances, dudas y conclusiones. Y cuando toque, comparte semillas para que el proyecto siga vivo.</p>
       </article>
     </section>
 
     <section class="cta-panel glass-panel">
       <div>
         <span class="eyebrow">Empieza ahora</span>
-        <h2>Busca un proyecto abierto o publica el tuyo.</h2>
+        <h2>Busca un proyecto abierto, comparte semillas o publica el tuyo.</h2>
       </div>
       <div class="cta-actions">
         <RouterLink :to="{ name: 'home', hash: '#projects' }" class="btn btn-primary btn-lg">Ver proyectos</RouterLink>

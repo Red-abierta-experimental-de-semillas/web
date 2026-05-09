@@ -24,7 +24,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
           <span class="eyebrow"><i class="bi bi-stars me-2"></i>Investigación abierta y viva</span>
           <h1>Proyectos con semillas, abiertos y compartidos.</h1>
           <p>
-            Encuentra ensayos abiertos, únete como voluntario o publica tu propio proyecto.
+            Encuentra ensayos abiertos, participa y comparte semillas: puedes aportar las tuyas y recibir semillas de otros proyectos.
           </p>
           <div class="hero-actions">
             <a href="#featured" class="btn btn-primary btn-lg">
@@ -79,18 +79,36 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
         <div class="step-card glass-panel">
           <span>2</span>
           <h3>Pide unirte</h3>
-          <p>Envía una solicitud al creador y cuenta cómo puedes participar.</p>
+          <p>Participar también abre la puerta a intercambiar semillas con el proyecto.</p>
         </div>
         <div class="step-card glass-panel">
           <span>3</span>
           <h3>Cultiva y observa</h3>
-          <p>Prueba en tu huerto, finca o espacio de cultivo.</p>
+          <p>Prueba, selecciona y guarda semillas si el proyecto lo requiere.</p>
         </div>
         <RouterLink :to="{ name: 'forum-index' }" class="step-card glass-panel">
           <span>4</span>
-          <h3>Comparte avances</h3>
-          <p>Usa el foro del proyecto para dejar dudas, fotos y resultados.</p>
+          <h3>Comparte semillas y resultados</h3>
+          <p>Al final, la red crece cuando se comparten datos, semillas y aprendizajes.</p>
         </RouterLink>
+      </div>
+    </section>
+
+    <section class="raes-shell seed-sharing-panel">
+      <div class="seed-sharing-card glass-panel">
+        <div>
+          <span class="eyebrow">Semillas compartidas</span>
+          <h2>Unirte a un proyecto también tiene recompensa.</h2>
+          <p>
+            RAES no va solo de colaborar por amor al arte. La idea es que los proyectos acaben moviendo semillas:
+            aportar las tuyas, recibir semillas de otros participantes y multiplicar variedades útiles.
+          </p>
+        </div>
+        <div class="seed-points">
+          <span><i class="bi bi-arrow-up-right-circle"></i> Das semillas cuando puedes aportar.</span>
+          <span><i class="bi bi-arrow-down-left-circle"></i> Recibes semillas cuando el proyecto reparte material.</span>
+          <span><i class="bi bi-flower1"></i> Ayudas a que las variedades circulen y no se pierdan.</span>
+        </div>
       </div>
     </section>
 
@@ -354,6 +372,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 }
 
 .how-panel,
+.seed-sharing-panel,
 .featured-panel,
 .projects-panel {
   padding-bottom: 2rem;
@@ -412,6 +431,52 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 .step-card p,
 .featured-card p {
   color: var(--raes-muted);
+}
+
+.seed-sharing-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: 1rem;
+  align-items: center;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border-radius: 1.7rem;
+}
+
+.seed-sharing-card h2 {
+  max-width: 720px;
+  margin: 0.2rem 0 0.8rem;
+  font-size: clamp(1.9rem, 4vw, 3.2rem);
+  line-height: 1;
+  font-weight: 950;
+}
+
+.seed-sharing-card p {
+  max-width: 780px;
+  color: var(--raes-muted);
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+.seed-points {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.seed-points span {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  padding: 0.85rem;
+  color: #203528;
+  font-weight: 850;
+  border: 1px solid rgba(47, 107, 63, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.seed-points i {
+  color: var(--raes-green-dark);
+  font-size: 1.2rem;
 }
 
 .featured-panel {
@@ -539,7 +604,8 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
   }
 
   .steps-grid,
-  .featured-grid {
+  .featured-grid,
+  .seed-sharing-card {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -558,7 +624,8 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
   }
 
   .steps-grid,
-  .featured-grid {
+  .featured-grid,
+  .seed-sharing-card {
     grid-template-columns: 1fr;
   }
 

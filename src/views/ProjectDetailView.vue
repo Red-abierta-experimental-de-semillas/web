@@ -208,12 +208,18 @@ const volunteerSlotsLabel = computed(() => {
 
       <article class="content-card glass-panel">
         <span class="eyebrow">Participación</span>
-        <h2>Qué se pide a los voluntarios</h2>
+        <h2>Qué se pide y qué semillas se comparten</h2>
         <p v-if="project.volunteerRequirements">{{ project.volunteerRequirements }}</p>
-        <p v-else>El creador todavía no ha detallado los requisitos. Puedes preguntar en el foro del proyecto.</p>
+        <p v-else>El creador todavía no ha detallado los requisitos ni el intercambio de semillas. Puedes preguntarlo en el foro del proyecto.</p>
         <RouterLink :to="{ name: 'project-forum', params: { id: project.id } }" class="btn btn-outline-primary mt-2">
           Ir al foro
         </RouterLink>
+      </article>
+
+      <article class="content-card glass-panel seed-reward-card">
+        <span class="eyebrow">Semillas</span>
+        <h2>Participar tiene retorno</h2>
+        <p>La idea es que el trabajo acabe en semillas compartidas: puedes aportar material, recibir semillas del proyecto o ayudar a multiplicarlas para otras personas.</p>
       </article>
 
       <aside class="content-card glass-panel side-card">
@@ -389,7 +395,7 @@ const volunteerSlotsLabel = computed(() => {
 
 .project-content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 320px;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) 320px;
   gap: 1rem;
   margin: 1rem 0;
 }
@@ -418,6 +424,11 @@ const volunteerSlotsLabel = computed(() => {
   white-space: pre-line;
   color: #334137;
   line-height: 1.7;
+}
+
+.seed-reward-card {
+  border-color: rgba(183, 211, 107, 0.38);
+  background: linear-gradient(135deg, rgba(232, 243, 220, 0.86), rgba(255, 255, 255, 0.72));
 }
 
 .side-card ul {
