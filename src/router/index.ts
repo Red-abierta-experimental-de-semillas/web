@@ -33,7 +33,17 @@ const router = createRouter({
     {
       path: '/como-funciona',
       name: 'how-it-works',
-      component: () => import('@/views/HowItWorksView.vue')
+      redirect: { name: 'what-is-this' }
+    },
+    {
+      path: '/involucrate',
+      name: 'get-involved',
+      component: () => import('@/views/GetInvolvedView.vue')
+    },
+    {
+      path: '/eventos',
+      name: 'events',
+      component: () => import('@/views/EventsView.vue')
     },
     {
       path: '/profile',

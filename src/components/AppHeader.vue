@@ -57,8 +57,8 @@ watch(
             <li><hr class="dropdown-divider"></li>
             <li><button class="dropdown-item" @click="handleSignOut"><i class="bi bi-arrow-bar-right me-2" />Cerrar sesión</button></li>
           </ul>
-          <a v-else class="btn btn-outline-dark login-button mobile-login-button" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
-            <i class="bi bi-box-arrow-in-right"></i><span>Entrar</span>
+          <a v-else class="btn btn-outline-dark login-button mobile-login-button" href="#" data-bs-toggle="modal" data-bs-target="#loginModal" aria-label="Iniciar sesión">
+            <i class="bi bi-person-circle"></i>
           </a>
         </div>
 
@@ -69,6 +69,12 @@ watch(
             </li>
             <li class="nav-item">
               <RouterLink :to="{ name: 'forum-index' }" class="nav-link">Foros</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'events' }" class="nav-link">Eventos</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink :to="{ name: 'get-involved' }" class="nav-link">Cómo involucrarte</RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink :to="{ name: 'what-is-this' }" class="nav-link">¿Qué es?</RouterLink>
@@ -101,7 +107,7 @@ watch(
           <ul class="navbar-nav ms-md-auto" v-else>
             <li class="nav-item">
               <a class="btn btn-outline-dark login-button" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                <i class="bi bi-person-circle me-1"></i> Iniciar sesión
               </a>
             </li>
           </ul>
@@ -240,6 +246,13 @@ watch(
   .navbar-collapse {
     grid-column: 1 / -1;
     grid-row: 2;
+    justify-self: start;
+    width: min(78vw, 18rem);
+    padding: 0.45rem;
+    border: 1px solid rgba(47, 107, 63, 0.12);
+    border-radius: 1rem;
+    background: rgba(255, 250, 240, 0.96);
+    box-shadow: 0 18px 50px rgba(31, 74, 45, 0.14);
   }
 
   .navbar-collapse > .navbar-nav.ms-md-auto {
@@ -267,20 +280,28 @@ watch(
 
   .nav-pills-soft {
     align-items: stretch;
-    border-radius: 1.1rem;
+    margin: 0 !important;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   .nav-link {
     width: 100%;
-    text-align: center;
-    justify-content: center;
+    text-align: left;
+    justify-content: flex-start;
+    padding: 0.6rem 0.75rem !important;
   }
 
   .mobile-login-button {
+    display: grid;
+    place-items: center;
+    min-width: 2.4rem;
     min-height: 2.4rem;
-    padding: 0.35rem 0.65rem;
-    font-size: 0.86rem;
-    border-radius: 0.8rem;
+    padding: 0.25rem;
+    font-size: 1.25rem;
+    border-radius: 999px;
   }
 
   .mobile-user-button {
