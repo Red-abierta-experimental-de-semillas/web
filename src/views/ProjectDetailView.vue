@@ -105,12 +105,16 @@ function onShare() {
   toaster.info({ text: 'Enlace del proyecto copiado al portapapeles.' })
 }
 
+const volunteerSlotsLabel = computed(() => {
+  if (!project.value || project.value.volunteersNeeded <= 0) return 'Sin límite de voluntarios'
+  return `${acceptedVolunteers.value.length}/${project.value.volunteersNeeded} plazas cubiertas`
+})
+
 </script>
 
 <template>
-  <div class="container" v-if="project">
-    <!-- Breadcrumb -->
-    <nav class="mb-2 pt-md-5 pt-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <main class="project-page raes-shell" v-if="project">
+    <nav class="project-breadcrumb" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <RouterLink :to="{ name: 'projects' }">Proyectos</RouterLink>
@@ -119,239 +123,420 @@ function onShare() {
       </ol>
     </nav>
 
-    <!-- Cabecera del proyecto -->
-    <section>
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img v-bind:src="project.image" class="img-fluid project-img pe-3" alt="Imagen del proyecto" />
+    <section class="project-hero glass-panel">
+      <div class="project-media">
+        <img :src="project.image" alt="Imagen del proyecto" />
+      </div>
+      <div class="project-main">
+        <div class="project-actions">
+          <RouterLink :to="{ name: 'project-forum', params: { id: project.id } }" class="btn btn-light">
+            <i class="bi-chat-dots me-1" /> Foro
+          </RouterLink>
+          <button class="btn btn-light" @click.prevent="onShare">
+            <i class="bi-share me-1" /> Compartir
+          </button>
+          <RouterLink v-if="isOwner" :to="{ name: 'project-edit', params: { id: project.id } }" class="btn btn-light">
+            <i class="bi-pencil me-1" /> Editar
+          </RouterLink>
         </div>
-        <div class="col-md-8 mt-4 mt-md-0">
-          <!-- Acciones -->
-          <div class="btn-group float-end">
-            <RouterLink
-              :to="{ name: 'project-forum', params: { id: project.id } }"
-              class="btn btn-sm btn-light"
-            >
-              <i class="bi-chat-dots" /> Foro
-            </RouterLink>
-            <button class="btn btn-sm btn-light" @click.prevent="onShare">
-              <i class="bi-share" /> Compartir
-            </button>
-            <RouterLink
-              v-if="isOwner"
-              :to="{ name: 'project-edit', params: { id: project.id } }"
-              class="btn btn-sm btn-light"
-            >
-              <i class="bi-pencil" /> Editar
-            </RouterLink>
+
+        <div class="badge-row">
+          <span :class="'badge text-bg-' + PROJECT_STATUS_COLORS[project.status]">
+            {{ PROJECT_STATUS_LABELS[project.status] }}
+          </span>
+          <span class="badge text-bg-light" v-if="project.category">
+            <i class="bi bi-tag me-1"></i>{{ project.category }}
+          </span>
+        </div>
+
+        <h1>{{ project.title }}</h1>
+        <p class="location" v-if="project.location"><i class="bi bi-geo-alt me-1"></i>{{ project.location }}</p>
+
+        <div class="quick-facts">
+          <div>
+            <strong>{{ acceptedMembers.length }}</strong>
+            <span>miembros</span>
           </div>
+          <div>
+            <strong>{{ volunteerSlotsLabel }}</strong>
+            <span>voluntariado</span>
+          </div>
+          <div>
+            <strong>{{ project.status === 'OPEN' && !isFull ? 'Sí' : 'No' }}</strong>
+            <span>admite solicitudes</span>
+          </div>
+        </div>
 
-          <h1 class="mb-1">{{ project.title }}</h1>
-          <p class="mb-2">
-            <span :class="'badge text-bg-' + PROJECT_STATUS_COLORS[project.status]">
-              {{ PROJECT_STATUS_LABELS[project.status] }}
-            </span>
-            <span class="badge text-bg-light ms-1" v-if="project.category">
-              <i class="bi bi-tag me-1"></i>{{ project.category }}
-            </span>
-          </p>
-          <p class="text-muted mb-2" v-if="project.location">
-            <i class="bi bi-geo-alt me-1"></i>{{ project.location }}
-          </p>
+        <div class="tag-row" v-if="project.tags && project.tags.length > 0">
+          <span class="badge text-bg-light" v-for="tag in project.tags" :key="tag">{{ tag }}</span>
+        </div>
 
-          <!-- Tags -->
-          <p v-if="project.tags && project.tags.length > 0">
-            <span class="badge text-bg-light me-1" v-for="tag in project.tags" :key="tag">
-              {{ tag }}
-            </span>
-          </p>
-
-          <!-- Voluntarios -->
-          <p class="text-muted">
-            <i class="bi bi-people me-1"></i>
-            {{ acceptedMembers.length }} miembro(s)
-            <span v-if="project.volunteersNeeded > 0">
-              · {{ acceptedVolunteers.length }} / {{ project.volunteersNeeded }} voluntarios
-            </span>
-            <span v-if="isFull" class="badge text-bg-danger ms-2">
-              <i class="bi bi-lock me-1"></i>Completo
-            </span>
-          </p>
-
-          <!-- Botón de unirse -->
-          <div v-if="user && !isOwner && !userMembership && project.status === 'OPEN' && !isFull" class="mt-3">
-            <button
-              v-if="!showJoinForm"
-              class="btn btn-primary"
-              @click="showJoinForm = true"
-            >
-              <i class="bi bi-person-plus me-1"></i> Unirme como voluntario
-            </button>
-            <div v-else class="card p-3">
-              <h6>Solicitar unirse al proyecto</h6>
-              <div class="mb-2">
-                <textarea
-                  class="form-control"
-                  v-model="joinMessage"
-                  rows="3"
-                  placeholder="Escribe un mensaje al creador del proyecto (opcional)..."
-                ></textarea>
-              </div>
-              <div class="d-flex gap-2">
-                <button class="btn btn-primary btn-sm" @click="onJoin">Enviar solicitud</button>
-                <button class="btn btn-light btn-sm" @click="showJoinForm = false">Cancelar</button>
-              </div>
+        <div class="join-box" v-if="user && !isOwner && !userMembership && project.status === 'OPEN' && !isFull">
+          <button v-if="!showJoinForm" class="btn btn-primary btn-lg" @click="showJoinForm = true">
+            <i class="bi bi-person-plus me-1"></i> Unirme al proyecto
+          </button>
+          <div v-else class="join-form">
+            <h2>Solicitar unirse</h2>
+            <textarea class="form-control" v-model="joinMessage" rows="3" placeholder="Mensaje para el creador (opcional)"></textarea>
+            <div class="d-flex gap-2 flex-wrap mt-2">
+              <button class="btn btn-primary" @click="onJoin">Enviar solicitud</button>
+              <button class="btn btn-light" @click="showJoinForm = false">Cancelar</button>
             </div>
           </div>
+        </div>
 
-          <!-- Estado de solicitud -->
-          <div v-if="userMembership && !isOwner" class="mt-3">
-            <span class="badge text-bg-info" v-if="userMembership.status === 'PENDING'">
-              <i class="bi bi-hourglass-split me-1"></i> Tu solicitud está pendiente de aprobación
-            </span>
-            <span class="badge text-bg-success" v-else-if="userMembership.status === 'ACCEPTED'">
-              <i class="bi bi-check-circle me-1"></i> Eres miembro de este proyecto
-            </span>
-            <span class="badge text-bg-danger" v-else-if="userMembership.status === 'REJECTED'">
-              <i class="bi bi-x-circle me-1"></i> Tu solicitud fue rechazada
-            </span>
-          </div>
+        <div v-if="userMembership && !isOwner" class="member-state">
+          <span class="badge text-bg-info" v-if="userMembership.status === 'PENDING'">
+            <i class="bi bi-hourglass-split me-1"></i> Tu solicitud está pendiente
+          </span>
+          <span class="badge text-bg-success" v-else-if="userMembership.status === 'ACCEPTED'">
+            <i class="bi bi-check-circle me-1"></i> Eres miembro de este proyecto
+          </span>
+          <span class="badge text-bg-danger" v-else-if="userMembership.status === 'REJECTED'">
+            <i class="bi bi-x-circle me-1"></i> Tu solicitud fue rechazada
+          </span>
         </div>
       </div>
     </section>
 
-    <!-- Tabs: Info + Miembros -->
-    <section class="mt-5">
-      <ul class="nav nav-tabs nav-fill">
-        <li class="nav-item">
-          <a href="#info" class="nav-link active" data-bs-toggle="tab">Información</a>
-        </li>
-        <li class="nav-item">
-          <a href="#members" class="nav-link" data-bs-toggle="tab">
-            Miembros
-            <span class="badge text-bg-primary ms-1" v-if="pendingMembers.length > 0 && isOwner">
-              {{ pendingMembers.length }}
-            </span>
-          </a>
-        </li>
-      </ul>
-      <div class="tab-content">
-        <!-- Tab: Información -->
-        <div class="tab-pane fade show active mt-4" id="info">
-          <h4>Descripción</h4>
-          <p style="white-space: pre-line">{{ project.description }}</p>
+    <section class="project-content-grid">
+      <article class="content-card glass-panel">
+        <span class="eyebrow">Objetivo</span>
+        <h2>Qué se quiere hacer</h2>
+        <p>{{ project.description }}</p>
+      </article>
 
-          <div v-if="project.volunteerRequirements" class="mt-4">
-            <h4>¿Qué se les pide a los voluntarios?</h4>
-            <p style="white-space: pre-line">{{ project.volunteerRequirements }}</p>
+      <article class="content-card glass-panel">
+        <span class="eyebrow">Participación</span>
+        <h2>Qué se pide a los voluntarios</h2>
+        <p v-if="project.volunteerRequirements">{{ project.volunteerRequirements }}</p>
+        <p v-else>El creador todavía no ha detallado los requisitos. Puedes preguntar en el foro del proyecto.</p>
+        <RouterLink :to="{ name: 'project-forum', params: { id: project.id } }" class="btn btn-outline-primary mt-2">
+          Ir al foro
+        </RouterLink>
+      </article>
+
+      <aside class="content-card glass-panel side-card">
+        <span class="eyebrow">Resumen</span>
+        <ul>
+          <li><strong>Estado:</strong> {{ PROJECT_STATUS_LABELS[project.status] }}</li>
+          <li v-if="project.location"><strong>Zona:</strong> {{ project.location }}</li>
+          <li><strong>Miembros:</strong> {{ acceptedMembers.length }}</li>
+          <li><strong>Voluntarios:</strong> {{ volunteerSlotsLabel }}</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="members-panel glass-panel">
+      <div class="members-heading">
+        <div>
+          <span class="eyebrow">Comunidad</span>
+          <h2>Miembros del proyecto</h2>
+        </div>
+        <span class="counter-pill" v-if="pendingMembers.length > 0 && isOwner">{{ pendingMembers.length }} pendientes</span>
+      </div>
+
+      <template v-if="user">
+        <div v-if="isOwner && pendingMembers.length > 0" class="pending-box">
+          <h3>Solicitudes pendientes</h3>
+          <div class="member-list">
+            <div class="member-item" v-for="member in pendingMembers" :key="member.id">
+              <div>
+                <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="member-link">
+                  <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" alt="avatar" />
+                  <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
+                </RouterLink>
+                <p v-if="member.message">“{{ member.message }}”</p>
+              </div>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-success" @click="onManageMember(member.id, 'ACCEPTED')"><i class="bi bi-check"></i> Aceptar</button>
+                <button class="btn btn-danger" @click="onManageMember(member.id, 'REJECTED')"><i class="bi bi-x"></i> Rechazar</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Tab: Miembros -->
-        <div class="tab-pane fade mt-4" id="members">
-          <template v-if="user">
-            <!-- Solicitudes pendientes (solo visible para el owner) -->
-            <div v-if="isOwner && pendingMembers.length > 0" class="mb-4">
-              <h5>Solicitudes pendientes</h5>
-              <div class="list-group">
-                <div
-                  class="list-group-item d-flex justify-content-between align-items-start"
-                  v-for="member in pendingMembers"
-                  :key="member.id"
-                >
-                  <div class="d-flex align-items-center mb-2 mb-sm-0">
-                    <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark">
-                      <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-2 object-fit-cover shadow-sm" width="35" height="35" alt="avatar" />
-                      <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
-                    </RouterLink>
-                    <p class="mb-0 text-muted ms-3" v-if="member.message">
-                      <small>"{{ member.message }}"</small>
-                    </p>
-                  </div>
-                  <div class="btn-group btn-group-sm">
-                    <button
-                      class="btn btn-success"
-                      @click="onManageMember(member.id, 'ACCEPTED')"
-                    >
-                      <i class="bi bi-check"></i> Aceptar
-                    </button>
-                    <button
-                      class="btn btn-danger"
-                      @click="onManageMember(member.id, 'REJECTED')"
-                    >
-                      <i class="bi bi-x"></i> Rechazar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Miembros aceptados -->
-            <h5>Miembros del proyecto</h5>
-            <div class="list-group" v-if="acceptedMembers.length > 0">
-              <div
-                class="list-group-item d-flex justify-content-between align-items-center"
-                v-for="member in acceptedMembers"
-                :key="member.id"
-              >
-                <span class="d-flex align-items-center">
-                  <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="text-decoration-none d-flex align-items-center text-dark hover-primary">
-                    <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" class="rounded-circle me-3 object-fit-cover shadow-sm" width="40" height="40" alt="avatar" />
-                    <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
-                  </RouterLink>
-                  <span class="badge text-bg-warning ms-3" v-if="member.role === 'OWNER'">Creador</span>
-                  <span class="badge text-bg-info ms-3" v-else>Voluntario</span>
-                </span>
-                <small class="text-muted">{{ MEMBERSHIP_STATUS_LABELS[member.status] }}</small>
-              </div>
-            </div>
-            <p class="text-muted" v-else>No hay miembros todavía.</p>
-          </template>
-          
-          <div v-else class="card border-0 bg-light text-center py-5 shadow-sm rounded-4 mt-4">
-            <div class="card-body">
-              <i class="bi bi-lock-fill display-4 d-block mb-3 text-secondary"></i>
-              <h4 class="text-dark fw-bold">Inicia sesión para ver los miembros</h4>
-              <p class="text-muted mx-auto" style="max-width: 500px">
-                Por motivos de privacidad, la lista de participantes y voluntarios 
-                solo es visible para los miembros de la red.
-              </p>
-              
-              <button class="btn btn-primary px-4 py-2 rounded-pill mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">
-                Iniciar Sesión
-              </button>
-            </div>
+        <div class="member-list" v-if="acceptedMembers.length > 0">
+          <div class="member-item compact" v-for="member in acceptedMembers" :key="member.id">
+            <RouterLink :to="{ name: 'user-detail', params: { id: member.userId } }" class="member-link">
+              <img :src="memberUsers[member.userId]?.image || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" alt="avatar" />
+              <strong>{{ memberUsers[member.userId]?.name || member.userId }}</strong>
+            </RouterLink>
+            <span class="badge text-bg-warning" v-if="member.role === 'OWNER'">Creador</span>
+            <span class="badge text-bg-info" v-else>Voluntario</span>
           </div>
         </div>
+        <p class="text-muted" v-else>No hay miembros todavía.</p>
+      </template>
+
+      <div v-else class="login-card">
+        <i class="bi bi-lock-fill"></i>
+        <h3>Inicia sesión para ver los miembros</h3>
+        <p>La lista de participantes solo es visible para los miembros de la red.</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar sesión</button>
       </div>
     </section>
-  </div>
+  </main>
 
-  <!-- Proyecto no encontrado -->
   <div class="container text-center mt-5" v-else>
     <h3 class="text-muted">Proyecto no encontrado</h3>
-    <RouterLink :to="{ name: 'projects'}" class="btn btn-primary mt-3">
-      Volver a proyectos
-    </RouterLink>
+    <RouterLink :to="{ name: 'projects'}" class="btn btn-primary mt-3">Volver a proyectos</RouterLink>
   </div>
 </template>
 
 <style scoped>
-.project-img {
-  width: 100%;
-  object-fit: cover;
+.project-page {
+  padding-top: 1rem;
+  padding-bottom: 3rem;
 }
 
-@media (max-width: 768px) {
-  .project-img {
-    width: 100%;
-    height: 30vh;
-    object-fit: cover;
+.project-breadcrumb a {
+  color: var(--raes-green-dark);
+  font-weight: 800;
+}
+
+.project-hero {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border-radius: 2rem;
+}
+
+.project-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+  border-radius: 1.5rem;
+}
+
+.project-main {
+  min-width: 0;
+}
+
+.project-actions,
+.badge-row,
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.project-actions {
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.project-main h1 {
+  margin: 0.8rem 0;
+  font-size: clamp(2.1rem, 6vw, 4.6rem);
+  line-height: 0.96;
+  font-weight: 950;
+}
+
+.location {
+  color: var(--raes-muted);
+  font-weight: 850;
+}
+
+.quick-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.2rem 0;
+}
+
+.quick-facts div {
+  padding: 0.9rem;
+  border: 1px solid rgba(47, 107, 63, 0.12);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.quick-facts strong,
+.quick-facts span {
+  display: block;
+}
+
+.quick-facts strong {
+  color: var(--raes-green-dark);
+  font-size: 1.2rem;
+  font-weight: 950;
+}
+
+.quick-facts span {
+  color: var(--raes-muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.join-box,
+.member-state {
+  margin-top: 1.2rem;
+}
+
+.join-form {
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.join-form h2 {
+  font-size: 1.2rem;
+  font-weight: 950;
+}
+
+.project-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 320px;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.content-card,
+.members-panel {
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+}
+
+.eyebrow {
+  color: var(--raes-green-dark);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.content-card h2,
+.members-heading h2,
+.pending-box h3 {
+  font-weight: 950;
+}
+
+.content-card p {
+  white-space: pre-line;
+  color: #334137;
+  line-height: 1.7;
+}
+
+.side-card ul {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0;
+  margin: 0.8rem 0 0;
+  list-style: none;
+}
+
+.members-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.counter-pill {
+  padding: 0.55rem 0.85rem;
+  color: var(--raes-green-dark);
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(232, 243, 220, 0.9);
+}
+
+.pending-box {
+  margin-bottom: 1rem;
+}
+
+.member-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.85rem;
+  border: 1px solid rgba(47, 107, 63, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.member-item p {
+  margin: 0.45rem 0 0 3rem;
+  color: var(--raes-muted);
+}
+
+.member-link {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.member-link img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.login-card {
+  max-width: 520px;
+  margin: auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.login-card i {
+  color: var(--raes-muted);
+  font-size: 2.5rem;
+}
+
+@media (max-width: 1050px) {
+  .project-hero,
+  .project-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-media img {
+    min-height: 320px;
   }
 }
 
-.hover-primary:hover strong {
-  color: #0d6efd;
-  text-decoration: underline;
+@media (max-width: 767.98px) {
+  .project-actions {
+    justify-content: stretch;
+  }
+
+  .project-actions .btn,
+  .join-box .btn-primary {
+    width: 100%;
+  }
+
+  .project-media img {
+    min-height: 240px;
+  }
+
+  .quick-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .members-heading,
+  .member-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .member-item .btn-group {
+    width: 100%;
+  }
+
+  .member-item .btn {
+    flex: 1;
+  }
 }
 </style>
