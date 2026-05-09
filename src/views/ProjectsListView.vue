@@ -112,6 +112,72 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
       </div>
     </section>
 
+
+    <section class="raes-shell example-flows-panel">
+      <div class="section-heading centered">
+        <span class="eyebrow">Ejemplos de proyecto</span>
+        <h2>Dos formas claras de participar</h2>
+      </div>
+
+      <div class="example-flow-grid">
+        <article class="example-flow-card glass-panel seed-cycle-card">
+          <div class="example-header">
+            <span class="example-number">1</span>
+            <div>
+              <h3>Ciclo de semillas</h3>
+              <p>Un proyecto reparte semillas, cada participante cultiva y al final se vuelve a compartir la cosecha.</p>
+            </div>
+          </div>
+          <div class="flow-diagram seed-cycle-diagram" aria-label="Creador envía semillas, participantes cultivan, devuelven semillas y se reparten mezcladas">
+            <div class="flow-node creator-node">
+              <i class="bi bi-person-badge"></i>
+              <strong>Creador</strong>
+              <small>envía semillas</small>
+            </div>
+            <div class="flow-arrow arrow-out">→</div>
+            <div class="participant-cluster">
+              <div class="flow-node"><i class="bi bi-flower1"></i><strong>Huerto A</strong><small>cultiva</small></div>
+              <div class="flow-node"><i class="bi bi-flower2"></i><strong>Huerto B</strong><small>cultiva</small></div>
+              <div class="flow-node"><i class="bi bi-tree"></i><strong>Huerto C</strong><small>cultiva</small></div>
+            </div>
+            <div class="flow-arrow arrow-back">↺</div>
+            <div class="flow-node mix-node">
+              <i class="bi bi-shuffle"></i>
+              <strong>Mezcla y reparto</strong>
+              <small>vuelven semillas a todos</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="example-flow-card glass-panel study-card">
+          <div class="example-header">
+            <span class="example-number">2</span>
+            <div>
+              <h3>Ensayo con datos</h3>
+              <p>Los participantes cultivan siguiendo una pauta y devuelven resultados comparables.</p>
+            </div>
+          </div>
+          <div class="flow-diagram study-diagram" aria-label="El proyecto define un método, participantes cultivan con parámetros y devuelven resultados">
+            <div class="flow-node protocol-node">
+              <i class="bi bi-clipboard-data"></i>
+              <strong>Método común</strong>
+              <small>qué medir y cómo</small>
+            </div>
+            <div class="study-lanes">
+              <div><span>Cultivo A</span><strong>altura</strong><strong>fecha</strong><strong>producción</strong></div>
+              <div><span>Cultivo B</span><strong>riego</strong><strong>plagas</strong><strong>sabor</strong></div>
+              <div><span>Cultivo C</span><strong>germinación</strong><strong>vigor</strong><strong>semilla final</strong></div>
+            </div>
+            <div class="flow-node results-node">
+              <i class="bi bi-bar-chart-line"></i>
+              <strong>Resultados</strong>
+              <small>datos, fotos y conclusiones</small>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <section class="raes-shell featured-panel" id="featured" v-if="featuredProjects.length > 0">
       <div class="section-heading">
         <div>
@@ -373,6 +439,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 .how-panel,
 .seed-sharing-panel,
+.example-flows-panel,
 .featured-panel,
 .projects-panel {
   padding-bottom: 2rem;
@@ -393,7 +460,8 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 }
 
 .steps-grid,
-.featured-grid {
+.featured-grid,
+.example-flow-grid {
   display: grid;
   gap: 1rem;
 }
@@ -477,6 +545,153 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 .seed-points i {
   color: var(--raes-green-dark);
   font-size: 1.2rem;
+}
+
+.example-flow-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.example-flow-card {
+  overflow: hidden;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border-radius: 1.7rem;
+}
+
+.example-header {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.example-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.5rem;
+  height: 2.5rem;
+  color: #fff;
+  font-weight: 950;
+  border-radius: 999px;
+  background: var(--raes-green-dark);
+}
+
+.example-header h3 {
+  margin: 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  font-weight: 950;
+}
+
+.example-header p {
+  margin: 0.25rem 0 0;
+  color: var(--raes-muted);
+}
+
+.flow-diagram {
+  position: relative;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  min-height: 330px;
+  border: 1px solid rgba(47, 107, 63, 0.12);
+  border-radius: 1.4rem;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(183, 211, 107, 0.38), transparent 28%),
+    radial-gradient(circle at 85% 80%, rgba(47, 107, 63, 0.16), transparent 30%),
+    rgba(255, 255, 255, 0.56);
+}
+
+.flow-node {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 5.5rem;
+  padding: 0.75rem;
+  text-align: center;
+  border: 1px solid rgba(47, 107, 63, 0.16);
+  border-radius: 1.1rem;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 14px 30px rgba(31, 74, 45, 0.08);
+}
+
+.flow-node i {
+  color: var(--raes-green-dark);
+  font-size: 1.55rem;
+}
+
+.flow-node strong,
+.flow-node small {
+  display: block;
+}
+
+.flow-node small {
+  color: var(--raes-muted);
+  font-weight: 750;
+}
+
+.seed-cycle-diagram {
+  grid-template-columns: minmax(110px, 0.72fr) auto minmax(0, 1.4fr);
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+}
+
+.creator-node {
+  grid-row: 1 / 3;
+}
+
+.participant-cluster {
+  display: grid;
+  grid-column: 3;
+  grid-row: 1 / 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.mix-node {
+  grid-column: 1 / -1;
+}
+
+.flow-arrow {
+  display: grid;
+  place-items: center;
+  color: var(--raes-green-dark);
+  font-size: 2.2rem;
+  font-weight: 950;
+}
+
+.arrow-back {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.study-diagram {
+  grid-template-rows: auto 1fr auto;
+}
+
+.study-lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.study-lanes div {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border: 1px dashed rgba(47, 107, 63, 0.28);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.study-lanes span {
+  color: var(--raes-green-dark);
+  font-weight: 950;
+}
+
+.study-lanes strong {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.82rem;
+  border-radius: 999px;
+  background: var(--raes-green-soft);
 }
 
 .featured-panel {
@@ -605,8 +820,23 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
   .steps-grid,
   .featured-grid,
-  .seed-sharing-card {
+  .seed-sharing-card,
+  .example-flow-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .seed-cycle-diagram,
+  .participant-cluster,
+  .study-lanes {
+    grid-template-columns: 1fr;
+  }
+
+  .creator-node,
+  .participant-cluster,
+  .mix-node,
+  .arrow-back {
+    grid-column: auto;
+    grid-row: auto;
   }
 }
 
@@ -625,7 +855,11 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
   .steps-grid,
   .featured-grid,
-  .seed-sharing-card {
+  .seed-sharing-card,
+  .example-flow-grid,
+  .seed-cycle-diagram,
+  .participant-cluster,
+  .study-lanes {
     grid-template-columns: 1fr;
   }
 
