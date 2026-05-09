@@ -18,163 +18,47 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 <template>
   <main>
-    <section class="hero-section">
-      <div class="raes-shell hero-grid">
-        <div class="hero-copy">
-          <span class="eyebrow"><i class="bi bi-stars me-2"></i>Investigación abierta y viva</span>
-          <h1>Proyectos con semillas, abiertos y compartidos.</h1>
-          <p>
-            Encuentra ensayos abiertos, participa y comparte semillas: puedes aportar las tuyas y recibir semillas de otros proyectos.
-          </p>
-          <div class="hero-actions">
-            <a href="#featured" class="btn btn-primary btn-lg">
-              Ver proyectos destacados <i class="bi bi-arrow-down-short ms-1"></i>
-            </a>
-            <RouterLink :to="{ name: 'how-it-works' }" class="btn btn-outline-primary btn-lg">
-              Cómo funciona
-            </RouterLink>
-            <RouterLink :to="{ name: 'project-new' }" class="btn btn-outline-primary btn-lg" v-if="user">
-              Crear proyecto
-            </RouterLink>
-          </div>
-        </div>
-
-        <div class="hero-card glass-panel">
-          <div class="hero-orbit">
-            <span></span><span></span><span></span>
-          </div>
-          <div class="stat-row">
-            <strong>{{ getProjects.length }}</strong>
-            <span>proyectos activos en la red</span>
-          </div>
-          <div class="mini-card">
-            <i class="bi bi-flower1"></i>
-            <div>
-              <strong>Semillas locales</strong>
-              <span>Ensayos, conservación y mejora participativa.</span>
-            </div>
-          </div>
-          <div class="mini-card offset-card">
-            <i class="bi bi-people"></i>
-            <div>
-              <strong>Colaboración abierta</strong>
-              <span>Voluntariado, foros y seguimiento por proyecto.</span>
-            </div>
-          </div>
+    <section class="hero-section simple-landing">
+      <div class="raes-shell hero-simple">
+        <span class="eyebrow"><i class="bi bi-stars me-2"></i>Red abierta de semillas</span>
+        <h1>Cultiva, prueba y comparte semillas.</h1>
+        <p>
+          RAES conecta proyectos de cultivo con personas que quieren participar, aprender y mover semillas entre territorios.
+        </p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary btn-lg">Ver proyectos</a>
+          <RouterLink :to="{ name: 'how-it-works' }" class="btn btn-outline-primary btn-lg">Cómo funciona</RouterLink>
+          <RouterLink :to="{ name: 'project-new' }" class="btn btn-outline-primary btn-lg" v-if="user">Crear proyecto</RouterLink>
         </div>
       </div>
     </section>
 
-    <section class="raes-shell how-panel">
-      <div class="section-heading centered">
-        <span class="eyebrow">Cómo funciona</span>
-        <h2>Participar es sencillo</h2>
-      </div>
-      <div class="steps-grid">
-        <a href="#projects" class="step-card glass-panel">
-          <span>1</span>
-          <h3>Encuentra un proyecto</h3>
-          <p>Busca cultivos, zonas o temas que te interesen.</p>
-        </a>
-        <div class="step-card glass-panel">
-          <span>2</span>
-          <h3>Pide unirte</h3>
-          <p>Participar también abre la puerta a intercambiar semillas con el proyecto.</p>
-        </div>
-        <div class="step-card glass-panel">
-          <span>3</span>
-          <h3>Cultiva y observa</h3>
-          <p>Prueba, selecciona y guarda semillas si el proyecto lo requiere.</p>
-        </div>
-        <RouterLink :to="{ name: 'forum-index' }" class="step-card glass-panel">
-          <span>4</span>
-          <h3>Comparte semillas y resultados</h3>
-          <p>Al final, la red crece cuando se comparten datos, semillas y aprendizajes.</p>
+    <section class="raes-shell landing-intro">
+      <p>
+        Puedes unirte a ensayos donde el creador reparte semillas, cada participante cultiva y después se devuelven o comparten semillas resultantes.
+      </p>
+      <p>
+        También hay proyectos de observación: se cultiva siguiendo una pauta común y se comparten datos, fotos y resultados.
+      </p>
+    </section>
+
+    <section class="raes-shell pillars-panel">
+      <div class="pillar-grid">
+        <RouterLink :to="{ name: 'how-it-works' }" class="pillar-card glass-panel">
+          <i class="bi bi-flower1"></i>
+          <h2>Semillas</h2>
+          <p>Aporta, recibe y multiplica semillas dentro de proyectos concretos.</p>
         </RouterLink>
-      </div>
-    </section>
-
-    <section class="raes-shell seed-sharing-panel">
-      <div class="seed-sharing-card glass-panel">
-        <div>
-          <span class="eyebrow">Semillas compartidas</span>
-          <h2>Unirte a un proyecto también tiene recompensa.</h2>
-          <p>
-            RAES no va solo de colaborar por amor al arte. La idea es que los proyectos acaben moviendo semillas:
-            aportar las tuyas, recibir semillas de otros participantes y multiplicar variedades útiles.
-          </p>
-        </div>
-        <div class="seed-points">
-          <span><i class="bi bi-arrow-up-right-circle"></i> Das semillas cuando puedes aportar.</span>
-          <span><i class="bi bi-arrow-down-left-circle"></i> Recibes semillas cuando el proyecto reparte material.</span>
-          <span><i class="bi bi-flower1"></i> Ayudas a que las variedades circulen y no se pierdan.</span>
-        </div>
-      </div>
-    </section>
-
-
-    <section class="raes-shell example-flows-panel">
-      <div class="section-heading centered">
-        <span class="eyebrow">Ejemplos de proyecto</span>
-        <h2>Dos formas claras de participar</h2>
-      </div>
-
-      <div class="example-flow-grid">
-        <article class="example-flow-card glass-panel seed-cycle-card">
-          <div class="example-header">
-            <span class="example-number">1</span>
-            <div>
-              <h3>Ciclo de semillas</h3>
-              <p>Un proyecto reparte semillas, cada participante cultiva y al final se vuelve a compartir la cosecha.</p>
-            </div>
-          </div>
-          <div class="flow-diagram seed-cycle-diagram" aria-label="Creador envía semillas, participantes cultivan, devuelven semillas y se reparten mezcladas">
-            <div class="flow-node creator-node">
-              <i class="bi bi-person-badge"></i>
-              <strong>Creador</strong>
-              <small>envía semillas</small>
-            </div>
-            <div class="flow-arrow arrow-out">→</div>
-            <div class="participant-cluster">
-              <div class="flow-node"><i class="bi bi-flower1"></i><strong>Huerto A</strong><small>cultiva</small></div>
-              <div class="flow-node"><i class="bi bi-flower2"></i><strong>Huerto B</strong><small>cultiva</small></div>
-              <div class="flow-node"><i class="bi bi-tree"></i><strong>Huerto C</strong><small>cultiva</small></div>
-            </div>
-            <div class="flow-arrow arrow-back">↺</div>
-            <div class="flow-node mix-node">
-              <i class="bi bi-shuffle"></i>
-              <strong>Mezcla y reparto</strong>
-              <small>vuelven semillas a todos</small>
-            </div>
-          </div>
-        </article>
-
-        <article class="example-flow-card glass-panel study-card">
-          <div class="example-header">
-            <span class="example-number">2</span>
-            <div>
-              <h3>Ensayo con datos</h3>
-              <p>Los participantes cultivan siguiendo una pauta y devuelven resultados comparables.</p>
-            </div>
-          </div>
-          <div class="flow-diagram study-diagram" aria-label="El proyecto define un método, participantes cultivan con parámetros y devuelven resultados">
-            <div class="flow-node protocol-node">
-              <i class="bi bi-clipboard-data"></i>
-              <strong>Método común</strong>
-              <small>qué medir y cómo</small>
-            </div>
-            <div class="study-lanes">
-              <div><span>Cultivo A</span><strong>altura</strong><strong>fecha</strong><strong>producción</strong></div>
-              <div><span>Cultivo B</span><strong>riego</strong><strong>plagas</strong><strong>sabor</strong></div>
-              <div><span>Cultivo C</span><strong>germinación</strong><strong>vigor</strong><strong>semilla final</strong></div>
-            </div>
-            <div class="flow-node results-node">
-              <i class="bi bi-bar-chart-line"></i>
-              <strong>Resultados</strong>
-              <small>datos, fotos y conclusiones</small>
-            </div>
-          </div>
-        </article>
+        <a href="#projects" class="pillar-card glass-panel">
+          <i class="bi bi-clipboard-data"></i>
+          <h2>Ensayos</h2>
+          <p>Participa en pruebas sencillas con cultivos, observaciones y resultados comparables.</p>
+        </a>
+        <RouterLink :to="{ name: 'forum-index' }" class="pillar-card glass-panel">
+          <i class="bi bi-chat-square-text"></i>
+          <h2>Comunidad</h2>
+          <p>Pregunta, coordina avances y deja aprendizajes en el foro de cada proyecto.</p>
+        </RouterLink>
       </div>
     </section>
 
@@ -298,6 +182,86 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 </template>
 
 <style scoped>
+
+.simple-landing {
+  padding: clamp(2rem, 7vw, 5rem) 0 2rem;
+}
+
+.hero-simple {
+  max-width: 980px;
+  text-align: center;
+}
+
+.hero-simple h1 {
+  margin: 0.7rem auto 1rem;
+  font-size: clamp(3rem, 10vw, 7rem);
+  line-height: 0.9;
+  font-weight: 950;
+}
+
+.hero-simple p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--raes-muted);
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.hero-simple .hero-actions {
+  justify-content: center;
+}
+
+.landing-intro {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.landing-intro p {
+  margin: 0;
+  padding: 1.25rem;
+  color: #334137;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  border-left: 4px solid var(--raes-green);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.pillars-panel {
+  padding-bottom: 2rem;
+}
+
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.pillar-card {
+  display: block;
+  padding: 1.25rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 1.35rem;
+}
+
+.pillar-card i {
+  color: var(--raes-green-dark);
+  font-size: 2rem;
+}
+
+.pillar-card h2 {
+  margin: 0.65rem 0 0.35rem;
+  font-weight: 950;
+}
+
+.pillar-card p {
+  margin: 0;
+  color: var(--raes-muted);
+}
+
 .hero-section {
   padding: 1.25rem 0 2.5rem;
 }
@@ -908,6 +872,11 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
   .counter-pill {
     text-align: center;
+  }
+
+  .landing-intro,
+  .pillar-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
