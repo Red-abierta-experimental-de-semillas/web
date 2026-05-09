@@ -4,15 +4,12 @@ import { useProjectStore } from '@/stores/project'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users'
 import { PROJECT_CATEGORIES } from '@/model/Project'
-import { computed } from 'vue'
 
 const userStore = useUsersStore()
 const { user } = storeToRefs(userStore)
 
 const projectStore = useProjectStore()
 const { isLoading, getProjects, filters } = storeToRefs(projectStore)
-
-const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 </script>
 
@@ -58,32 +55,6 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
           <i class="bi bi-chat-square-text"></i>
           <h2>Comunidad</h2>
           <p>Pregunta, coordina avances y deja aprendizajes en el foro de cada proyecto.</p>
-        </RouterLink>
-      </div>
-    </section>
-
-    <section class="raes-shell featured-panel" id="featured" v-if="featuredProjects.length > 0">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">Proyectos destacados</span>
-          <h2>Empieza por aquí</h2>
-        </div>
-        <a href="#projects" class="btn btn-outline-primary">Ver todos</a>
-      </div>
-      <div class="featured-grid">
-        <RouterLink
-          v-for="project in featuredProjects"
-          :key="project.id"
-          :to="{ name: 'project-detail', params: { id: project.id } }"
-          class="featured-card glass-panel"
-        >
-          <img :src="project.image" :alt="project.title" />
-          <div>
-            <span class="badge text-bg-light">{{ project.category || 'Proyecto' }}</span>
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.location || 'Ubicación abierta' }}</p>
-            <strong>Ver proyecto <i class="bi bi-arrow-right-short"></i></strong>
-          </div>
         </RouterLink>
       </div>
     </section>
@@ -184,7 +155,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 <style scoped>
 
 .simple-landing {
-  padding: clamp(2rem, 7vw, 5rem) 0 2rem;
+  padding: clamp(1.5rem, 5vw, 3.5rem) 0 1.5rem;
 }
 
 .hero-simple {
@@ -194,7 +165,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 .hero-simple h1 {
   margin: 0.7rem auto 1rem;
-  font-size: clamp(3rem, 10vw, 7rem);
+  font-size: clamp(2.25rem, 7vw, 4.6rem);
   line-height: 0.9;
   font-weight: 950;
 }
@@ -203,7 +174,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
   max-width: 760px;
   margin: 0 auto;
   color: var(--raes-muted);
-  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
   line-height: 1.55;
 }
 
@@ -222,7 +193,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
   margin: 0;
   padding: 1.25rem;
   color: #334137;
-  font-size: 1.08rem;
+  font-size: 1rem;
   line-height: 1.65;
   border-left: 4px solid var(--raes-green);
   border-radius: 1rem;
@@ -419,7 +390,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 .section-heading h2,
 .centered h2 {
   margin: 0.15rem 0 0;
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(1.45rem, 3vw, 2.25rem);
   font-weight: 950;
 }
 
@@ -727,7 +698,7 @@ const featuredProjects = computed(() => getProjects.value.slice(0, 3))
 
 .list-heading h2 {
   margin: 0.15rem 0 0;
-  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-size: clamp(1.45rem, 3vw, 2.25rem);
   font-weight: 950;
 }
 

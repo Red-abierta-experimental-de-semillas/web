@@ -43,368 +43,369 @@ function formatDate(dateStr: string) {
 </script>
 
 <template>
-  <main>
-    <section class="forum-hero">
-      <div class="raes-shell forum-hero-grid">
-        <div>
-          <RouterLink :to="{ name: 'home' }" class="back-link">
-            <i class="bi bi-arrow-left"></i> Volver a proyectos
-          </RouterLink>
-          <span class="eyebrow"><i class="bi bi-chat-square-heart me-2"></i>Comunidad RAES</span>
-          <h1>Foros para hablar de los proyectos.</h1>
-          <p>Un espacio para compartir avances, dudas y decisiones de cada proyecto.</p>
-        </div>
-        <aside class="forum-stats glass-panel">
-          <div>
-            <strong>{{ projects.length }}</strong>
-            <span>foros de proyecto</span>
-          </div>
-          <div>
-            <strong>{{ totalMessages }}</strong>
-            <span>mensajes publicados</span>
-          </div>
-        </aside>
+  <main class="forum-page">
+    <section class="raes-shell forum-topbar">
+      <div>
+        <RouterLink :to="{ name: 'home' }" class="back-link">
+          <i class="bi bi-arrow-left"></i> Proyectos
+        </RouterLink>
+        <h1>Foros</h1>
+        <p>Conversaciones de la red, ordenadas por tema y proyecto.</p>
+      </div>
+      <div class="forum-summary">
+        <span>{{ projects.length }} foros</span>
+        <span>{{ totalMessages }} mensajes</span>
       </div>
     </section>
 
-    <section class="raes-shell forum-board">
-      <div v-if="isLoading" class="loading-state glass-panel">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p>Cargando temas...</p>
-      </div>
-
-      <template v-else>
-        <RouterLink :to="{ name: 'forum-general' }" class="forum-feature-card glass-panel">
-          <div class="feature-icon"><i class="bi bi-globe2"></i></div>
-          <div>
-            <span class="eyebrow">Foro público</span>
-            <h2>Discusión general</h2>
-            <p>Temas comunes de la red que no pertenecen a un proyecto concreto.</p>
-          </div>
-          <div class="feature-meta">
-            <span class="badge text-bg-light"><i class="bi bi-people me-1"></i>Público</span>
-            <strong>{{ postCounts['general'] || 0 }}</strong>
-            <small>{{ postCounts['general'] === 1 ? 'mensaje' : 'mensajes' }}</small>
-          </div>
+    <section class="raes-shell forum-layout">
+      <aside class="forum-sidebar">
+        <RouterLink :to="{ name: 'forum-general' }" class="sidebar-link active-link">
+          <i class="bi bi-globe2"></i>
+          Discusión general
+          <span>{{ postCounts['general'] || 0 }}</span>
         </RouterLink>
+        <a href="#project-forums" class="sidebar-link">
+          <i class="bi bi-folder2-open"></i>
+          Proyectos
+          <span>{{ projects.length }}</span>
+        </a>
+      </aside>
 
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">Foros de proyectos</span>
-            <h2>Foros por proyecto</h2>
-          </div>
-          <span class="counter-pill">{{ projects.length }} proyectos</span>
+      <div class="forum-content">
+        <div v-if="isLoading" class="loading-state">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p>Cargando temas...</p>
         </div>
 
-        <div class="project-forum-grid" v-if="projects.length > 0">
-          <RouterLink
-            v-for="project in projects"
-            :key="project.id"
-            :to="{ name: 'project-forum', params: { id: project.id } }"
-            class="project-forum-card card"
-          >
-            <div class="project-cover">
-              <img v-if="project.image" :src="project.image" :alt="project.title" />
-              <div v-else class="project-placeholder"><i class="bi bi-image"></i></div>
-              <span v-if="project.status === 'CLOSED'" class="closed-chip">Cerrado</span>
+        <template v-else>
+          <RouterLink :to="{ name: 'forum-general' }" class="topic-row general-row">
+            <div class="topic-icon"><i class="bi bi-globe2"></i></div>
+            <div class="topic-main">
+              <h2>Discusión general</h2>
+              <p>Temas comunes de la red que no pertenecen a un proyecto concreto.</p>
             </div>
-            <div class="project-forum-body">
-              <div class="card-meta">
-                <span class="badge text-bg-light">{{ project.category || 'Proyecto' }}</span>
-                <span><i class="bi bi-chat-left-text me-1"></i>{{ postCounts[project.id] || 0 }}</span>
-              </div>
-              <h3>{{ project.title }}</h3>
-              <p>{{ project.description }}</p>
-              <small><i class="bi bi-calendar3 me-1"></i>Creado el {{ formatDate(project.createdAt) }}</small>
+            <div class="topic-count">
+              <strong>{{ postCounts['general'] || 0 }}</strong>
+              <span>mensajes</span>
             </div>
           </RouterLink>
-        </div>
 
-        <div class="empty-state glass-panel" v-else>
-          <i class="bi bi-box-seam"></i>
-          <h2>No hay proyectos disponibles</h2>
-          <p>Cuando haya proyectos, sus foros aparecerán aquí.</p>
-        </div>
-      </template>
+          <div class="forum-section-title" id="project-forums">
+            <h2>Foros de proyectos</h2>
+            <span>{{ projects.length }} proyectos</span>
+          </div>
+
+          <div class="topic-list" v-if="projects.length > 0">
+            <RouterLink
+              v-for="project in projects"
+              :key="project.id"
+              :to="{ name: 'project-forum', params: { id: project.id } }"
+              class="topic-row"
+            >
+              <div class="topic-avatar">
+                <img v-if="project.image" :src="project.image" :alt="project.title" />
+                <i v-else class="bi bi-seedling"></i>
+              </div>
+              <div class="topic-main">
+                <div class="topic-meta">
+                  <span>{{ project.category || 'Proyecto' }}</span>
+                  <span v-if="project.status === 'CLOSED'">Cerrado</span>
+                </div>
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.description }}</p>
+                <small>Creado el {{ formatDate(project.createdAt) }}</small>
+              </div>
+              <div class="topic-count">
+                <strong>{{ postCounts[project.id] || 0 }}</strong>
+                <span>mensajes</span>
+              </div>
+            </RouterLink>
+          </div>
+
+          <div class="empty-state" v-else>
+            <i class="bi bi-box-seam"></i>
+            <h2>No hay proyectos disponibles</h2>
+            <p>Cuando haya proyectos, sus foros aparecerán aquí.</p>
+          </div>
+        </template>
+      </div>
     </section>
   </main>
 </template>
 
 <style scoped>
-.forum-hero {
-  padding: 1.25rem 0 2rem;
-}
-
-.forum-hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 2rem;
-  align-items: end;
-}
-
-.back-link {
-  display: inline-flex;
-  gap: 0.45rem;
-  align-items: center;
-  margin-bottom: 1.25rem;
-  color: var(--raes-muted);
-  font-weight: 900;
-  text-decoration: none;
-}
-
-.back-link:hover { color: var(--raes-green-dark); }
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  color: var(--raes-green-dark);
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.forum-hero h1 {
-  max-width: 860px;
-  margin: 0.8rem 0 1rem;
-  font-size: clamp(2.35rem, 6vw, 5rem);
-  font-weight: 950;
-  line-height: 0.95;
-}
-
-.forum-hero p {
-  max-width: 720px;
-  color: var(--raes-muted);
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
-  line-height: 1.65;
-}
-
-.forum-stats {
-  display: grid;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-radius: 1.65rem;
-}
-
-.forum-stats div {
-  padding: 1rem;
-  border-radius: 1.2rem;
-  background: rgba(255, 255, 255, 0.66);
-}
-
-.forum-stats strong {
-  display: block;
-  color: var(--raes-green-dark);
-  font-size: 2.6rem;
-  line-height: 1;
-}
-
-.forum-stats span {
-  color: var(--raes-muted);
-  font-weight: 900;
-}
-
-.forum-board {
+.forum-page {
   padding-bottom: 2rem;
 }
 
-.loading-state,
-.empty-state {
-  padding: 4rem 1.5rem;
-  text-align: center;
-  border-radius: 2rem;
-}
-
-.loading-state p,
-.empty-state p { color: var(--raes-muted); margin: 1rem 0 0; }
-.empty-state i { color: var(--raes-green); font-size: 3rem; }
-
-.forum-feature-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 1.25rem;
-  align-items: center;
-  padding: 1.3rem;
-  color: inherit;
-  text-decoration: none;
-  border-radius: 1.8rem;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.forum-feature-card:hover,
-.project-forum-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 28px 80px rgba(31, 74, 45, 0.18);
-}
-
-.feature-icon {
-  display: grid;
-  place-items: center;
-  width: 4.6rem;
-  height: 4.6rem;
-  color: var(--raes-green-dark);
-  border-radius: 1.45rem;
-  background: linear-gradient(145deg, #fff, var(--raes-green-soft));
-  font-size: 2rem;
-}
-
-.forum-feature-card h2,
-.section-heading h2,
-.empty-state h2 {
-  margin: 0.2rem 0;
-  font-weight: 950;
-}
-
-.forum-feature-card p {
-  margin: 0;
-  color: var(--raes-muted);
-  line-height: 1.55;
-}
-
-.feature-meta {
-  display: grid;
-  justify-items: end;
-  gap: 0.25rem;
-  color: var(--raes-muted);
-}
-
-.feature-meta strong {
-  color: var(--raes-green-dark);
-  font-size: 2.4rem;
-  line-height: 1;
-}
-
-.section-heading {
+.forum-topbar {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   align-items: end;
-  margin: 2.2rem 0 1rem;
+  padding: 1rem 0 1.25rem;
+  border-bottom: 1px solid rgba(47, 107, 63, 0.13);
 }
 
-.counter-pill {
-  padding: 0.65rem 0.9rem;
+.back-link {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.65rem;
+  color: var(--raes-muted);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.back-link:hover {
   color: var(--raes-green-dark);
+}
+
+.forum-topbar h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.6rem);
   font-weight: 900;
+  line-height: 1;
+}
+
+.forum-topbar p {
+  margin: 0.45rem 0 0;
+  color: var(--raes-muted);
+  font-size: 1rem;
+}
+
+.forum-summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.forum-summary span {
+  padding: 0.45rem 0.7rem;
+  color: var(--raes-green-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
   border-radius: 999px;
-  background: rgba(232, 243, 220, 0.9);
+  background: rgba(232, 243, 220, 0.8);
 }
 
-.project-forum-grid {
+.forum-layout {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 1.5rem;
+  padding-top: 1.25rem;
 }
 
-.project-forum-card {
+.forum-sidebar {
+  position: sticky;
+  top: 7rem;
+  align-self: start;
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  overflow: hidden;
+  gap: 0.35rem;
+}
+
+.sidebar-link {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  color: var(--raes-muted);
+  text-decoration: none;
+  border-radius: 0.75rem;
+  font-weight: 800;
+}
+
+.sidebar-link:hover,
+.active-link {
+  color: var(--raes-green-dark);
+  background: rgba(232, 243, 220, 0.75);
+}
+
+.forum-content {
+  min-width: 0;
+}
+
+.loading-state,
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--raes-muted);
+}
+
+.empty-state i {
+  color: var(--raes-green);
+  font-size: 2.4rem;
+}
+
+.topic-list {
+  display: grid;
+  border-top: 1px solid rgba(47, 107, 63, 0.14);
+}
+
+.topic-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 1rem 0.25rem;
   color: inherit;
   text-decoration: none;
-  border-radius: 1.55rem;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  border-bottom: 1px solid rgba(47, 107, 63, 0.14);
 }
 
-.project-cover {
-  position: relative;
-  min-height: 210px;
+.topic-row:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.general-row {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgba(47, 107, 63, 0.14);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.topic-icon,
+.topic-avatar {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  overflow: hidden;
+  color: var(--raes-green-dark);
+  border-radius: 999px;
   background: var(--raes-green-soft);
+  font-size: 1.25rem;
 }
 
-.project-cover img,
-.project-placeholder {
+.topic-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.project-placeholder {
-  display: grid;
-  place-items: center;
-  color: var(--raes-green-dark);
-  font-size: 2rem;
-}
-
-.closed-chip {
-  position: absolute;
-  left: 0.8rem;
-  bottom: 0.8rem;
-  padding: 0.35rem 0.65rem;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 900;
-  border-radius: 999px;
-  background: #9b2c2c;
-}
-
-.project-forum-body {
-  display: flex;
-  flex-direction: column;
+.topic-main {
   min-width: 0;
-  padding: 1.1rem;
 }
 
-.card-meta {
+.topic-meta {
   display: flex;
-  justify-content: space-between;
-  gap: 0.75rem;
-  align-items: center;
-  color: var(--raes-muted);
-  font-weight: 900;
-  margin-bottom: 0.75rem;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+  color: var(--raes-green-dark);
+  font-size: 0.78rem;
+  font-weight: 850;
 }
 
-.project-forum-body h3 {
+.topic-main h2,
+.topic-main h3 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 950;
-  line-height: 1.12;
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1.2;
 }
 
-.project-forum-body p {
+.topic-main p {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin: 0.7rem 0 1rem;
+  margin: 0.25rem 0 0;
   color: var(--raes-muted);
-  line-height: 1.55;
+  font-size: 0.94rem;
+  line-height: 1.45;
 }
 
-.project-forum-body small {
-  margin-top: auto;
+.topic-main small {
+  display: block;
+  margin-top: 0.35rem;
   color: var(--raes-muted);
+  font-size: 0.82rem;
+}
+
+.topic-count {
+  min-width: 4.5rem;
+  color: var(--raes-muted);
+  text-align: right;
+}
+
+.topic-count strong,
+.topic-count span {
+  display: block;
+}
+
+.topic-count strong {
+  color: var(--raes-green-dark);
+  font-size: 1.1rem;
+}
+
+.topic-count span {
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.forum-section-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.forum-section-title h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.forum-section-title span {
+  color: var(--raes-muted);
+  font-size: 0.9rem;
   font-weight: 800;
 }
 
-@media (max-width: 1000px) {
-  .forum-hero-grid,
-  .project-forum-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 767.98px) {
-  .forum-feature-card,
-  .section-heading,
-  .project-forum-card {
-    grid-template-columns: 1fr;
-  }
-
-  .forum-feature-card {
+  .forum-topbar {
     align-items: start;
+    flex-direction: column;
   }
 
-  .feature-meta {
-    justify-items: start;
-    grid-template-columns: auto auto auto;
-    align-items: center;
+  .forum-summary {
+    justify-content: start;
   }
 
-  .project-cover {
-    min-height: 190px;
+  .forum-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .forum-sidebar {
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+
+  .sidebar-link {
+    white-space: nowrap;
+  }
+
+  .topic-row,
+  .general-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .topic-count {
+    grid-column: 2;
+    display: flex;
+    gap: 0.35rem;
+    min-width: 0;
+    text-align: left;
   }
 }
 </style>

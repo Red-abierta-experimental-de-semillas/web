@@ -33,6 +33,11 @@ watch(
   <header class="fixed-top d-print-none raes-header">
     <nav class="navbar navbar-expand-md">
       <div class="container raes-nav-shell">
+        <button class="navbar-toggler mobile-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Abrir navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
         <RouterLink :to="{ name: 'home' }" class="navbar-brand d-flex align-items-center gap-3 me-3">
           <span class="brand-mark">
             <img src="@/assets/logo.svg" alt="Logo de la Red Abierta Experimental de Semillas" />
@@ -43,10 +48,19 @@ watch(
           </span>
         </RouterLink>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Abrir navegación">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="mobile-auth-slot">
+          <button v-if="user" class="btn user-chip mobile-user-button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img :src="user.image" alt="Foto de perfil" width="34" height="34" class="rounded-circle">
+          </button>
+          <ul v-if="user" class="dropdown-menu dropdown-menu-end shadow">
+            <li><RouterLink :to="{ name: 'profile' }" class="dropdown-item"><i class="bi bi-person me-2" />Editar perfil</RouterLink></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item" @click="handleSignOut"><i class="bi bi-arrow-bar-right me-2" />Cerrar sesión</button></li>
+          </ul>
+          <a v-else class="btn btn-outline-dark login-button mobile-login-button" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="bi bi-box-arrow-in-right"></i><span>Entrar</span>
+          </a>
+        </div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mx-md-auto my-3 my-md-0 nav-pills-soft">
@@ -109,6 +123,10 @@ watch(
 
 .raes-nav-shell {
   min-height: 4.35rem;
+}
+
+.mobile-auth-slot {
+  display: none;
 }
 
 .navbar-brand {
@@ -190,14 +208,57 @@ watch(
     padding: 0.35rem 0;
   }
 
-  .raes-nav-shell {
-    min-height: 4.25rem;
+  .navbar .raes-nav-shell {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.55rem;
+    min-height: 3.75rem;
+    align-items: center;
+  }
+
+  .mobile-menu-toggle {
+    display: inline-flex;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .navbar-brand {
+    grid-column: 2;
+    grid-row: 1;
+    justify-content: center;
+    margin: 0 !important;
+  }
+
+  .mobile-auth-slot {
+    display: flex;
+    grid-column: 3;
+    grid-row: 1;
+    justify-content: end;
+    position: relative;
+  }
+
+  .navbar-collapse {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .navbar-collapse > .navbar-nav.ms-md-auto {
+    display: none;
   }
 
   .brand-mark {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 1rem;
+    width: 2.65rem;
+    height: 2.65rem;
+    border-radius: 0.9rem;
+  }
+
+  .brand-mark img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .brand-title {
+    font-size: 0.95rem;
   }
 
   .brand-copy small {
@@ -209,12 +270,22 @@ watch(
     border-radius: 1.1rem;
   }
 
-  .nav-link,
-  .login-button,
-  .user-chip {
+  .nav-link {
     width: 100%;
     text-align: center;
     justify-content: center;
+  }
+
+  .mobile-login-button {
+    min-height: 2.4rem;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.86rem;
+    border-radius: 0.8rem;
+  }
+
+  .mobile-user-button {
+    min-height: 2.4rem;
+    padding: 0.15rem;
   }
 }
 </style>
