@@ -19,9 +19,9 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
       <div class="raes-shell hero-grid">
         <div class="hero-copy">
           <span class="eyebrow"><i class="bi bi-stars me-2"></i>Investigación abierta y viva</span>
-          <h1>Conecta cultivos, personas y experimentos con semillas.</h1>
+          <h1>Proyectos con semillas, abiertos y compartidos.</h1>
           <p>
-            Una red para compartir proyectos, encontrar colaboración y documentar aprendizajes del campo con una interfaz más clara, rápida y bonita.
+            Una red para compartir proyectos con semillas, encontrar colaboración y guardar lo aprendido en el campo.
           </p>
           <div class="hero-actions">
             <a href="#projects" class="btn btn-primary btn-lg">
@@ -311,6 +311,11 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
   border-radius: 1rem 0 0 1rem;
 }
 
+.search-group .form-control {
+  min-width: 0;
+  width: 100%;
+}
+
 .filters-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -407,7 +412,19 @@ const { isLoading, getProjects, filters } = storeToRefs(projectStore)
 
   .search-group {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .search-group .input-group-text {
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-group .form-control {
+    min-height: 3.15rem;
+    border-radius: 0 0.9rem 0.9rem 0 !important;
+    font-size: 1rem;
   }
 
   .search-group .btn {
