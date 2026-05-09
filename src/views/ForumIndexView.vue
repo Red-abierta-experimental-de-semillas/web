@@ -51,8 +51,8 @@ function formatDate(dateStr: string) {
             <i class="bi bi-arrow-left"></i> Volver a proyectos
           </RouterLink>
           <span class="eyebrow"><i class="bi bi-chat-square-heart me-2"></i>Comunidad RAES</span>
-          <h1>Foros para pensar, preguntar y documentar sin perder el hilo.</h1>
-          <p>Un espacio común y foros por proyecto para coordinar experimentos, compartir avances y resolver dudas.</p>
+          <h1>Foros para hablar de los proyectos.</h1>
+          <p>Un espacio para compartir avances, dudas y decisiones de cada proyecto.</p>
         </div>
         <aside class="forum-stats glass-panel">
           <div>
@@ -79,7 +79,7 @@ function formatDate(dateStr: string) {
           <div>
             <span class="eyebrow">Foro público</span>
             <h2>Discusión general</h2>
-            <p>Conversaciones abiertas para toda la comunidad y temas que no pertenecen a un proyecto concreto.</p>
+            <p>Temas comunes de la red que no pertenecen a un proyecto concreto.</p>
           </div>
           <div class="feature-meta">
             <span class="badge text-bg-light"><i class="bi bi-people me-1"></i>Público</span>
@@ -90,7 +90,7 @@ function formatDate(dateStr: string) {
 
         <div class="section-heading">
           <div>
-            <span class="eyebrow">Conversaciones por experimento</span>
+            <span class="eyebrow">Foros de proyectos</span>
             <h2>Foros por proyecto</h2>
           </div>
           <span class="counter-pill">{{ projects.length }} proyectos</span>

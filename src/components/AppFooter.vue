@@ -7,7 +7,7 @@ import {RouterLink} from 'vue-router'
     <div class="raes-shell footer-grid">
       <div>
         <RouterLink :to="{ name: 'home' }" class="footer-brand">Red Abierta Experimental de Semillas</RouterLink>
-        <p>© 2025 · Investigación agrícola abierta, colaborativa y un poco más bonita.</p>
+        <p>© 2025 · Investigación agrícola abierta y colaborativa.</p>
       </div>
       <nav class="footer-links" aria-label="Enlaces legales">
         <RouterLink :to="{ name: 'home' }">Inicio</RouterLink>
