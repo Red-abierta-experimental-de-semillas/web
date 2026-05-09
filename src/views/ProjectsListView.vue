@@ -38,7 +38,7 @@ const selectedProjects = computed(() =>
           </div>
         </div>
         <figure class="hero-image">
-          <img src="@/assets/vegetable-varieties-hero.png" alt="Variedades coloridas de hortalizas y semillas" />
+          <img src="@/assets/landing-vegetables.jpg" alt="Variedades coloridas de hortalizas y semillas" />
         </figure>
       </div>
     </section>
@@ -52,17 +52,17 @@ const selectedProjects = computed(() =>
 
     <section class="raes-shell section-links">
       <RouterLink :to="{ name: 'what-is-this' }" class="section-card">
-        <img src="@/assets/sfg/sfg-1.svg" alt="" />
+        <img src="@/assets/landing-corn.jpg" alt="" />
         <h2>Entiende la red</h2>
         <p>Qué es, por qué importa la diversidad genética y cómo se coordinan los proyectos.</p>
       </RouterLink>
       <a href="#projects" class="section-card">
-        <img src="@/assets/sfg/sfg-5.svg" alt="" />
+        <img src="@/assets/landing-beans.jpg" alt="" />
         <h2>Participa cultivando</h2>
         <p>Únete a ensayos, recibe o aporta semillas, cultiva y comparte resultados.</p>
       </a>
       <RouterLink :to="{ name: 'get-involved' }" class="section-card">
-        <img src="@/assets/sfg/sfg-9.svg" alt="" />
+        <img src="@/assets/landing-flowers.jpg" alt="" />
         <h2>Involúcrate</h2>
         <p>Crea proyectos, propón ideas, ayuda en foros o escribe para colaborar.</p>
       </RouterLink>
@@ -296,6 +296,7 @@ const selectedProjects = computed(() =>
   padding: 1rem;
   color: inherit;
   text-decoration: none;
+  overflow: hidden;
   border: 1px solid rgba(47, 107, 63, 0.12);
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.58);
@@ -303,9 +304,10 @@ const selectedProjects = computed(() =>
 
 .section-card img {
   width: 100%;
-  height: 120px;
-  object-fit: contain;
-  margin-bottom: 0.8rem;
+  height: 150px;
+  object-fit: cover;
+  margin: -1rem -1rem 0.85rem;
+  width: calc(100% + 2rem);
 }
 
 .section-card h2,
