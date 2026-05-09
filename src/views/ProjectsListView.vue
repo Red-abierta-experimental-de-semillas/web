@@ -52,17 +52,17 @@ const selectedProjects = computed(() =>
 
     <section class="raes-shell section-links">
       <RouterLink :to="{ name: 'what-is-this' }" class="section-card">
-        <img src="@/assets/landing-corn-transparent.jpg" alt="" />
+        <img src="@/assets/landing-corn-transparent.png" alt="" />
         <h2>Entiende la red</h2>
         <p>Qué es, por qué importa la diversidad genética y cómo se coordinan los proyectos.</p>
       </RouterLink>
       <a href="#projects" class="section-card">
-        <img src="@/assets/landing-beans-transparent.jpg" alt="" />
+        <img src="@/assets/landing-beans-transparent.png" alt="" />
         <h2>Participa cultivando</h2>
         <p>Únete a ensayos, recibe o aporta semillas, cultiva y comparte resultados.</p>
       </a>
       <RouterLink :to="{ name: 'get-involved' }" class="section-card">
-        <img src="@/assets/landing-flowers-transparent.jpg" alt="" />
+        <img src="@/assets/landing-flowers-transparent.png" alt="" />
         <h2>Involúcrate</h2>
         <p>Crea proyectos, propón ideas, ayuda en foros o escribe para colaborar.</p>
       </RouterLink>
