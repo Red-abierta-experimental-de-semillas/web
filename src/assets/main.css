@@ -72,7 +72,7 @@ img { max-width: 100%; }
 }
 
 .raes-shell {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1440px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
@@ -164,7 +164,7 @@ img { max-width: 100%; }
   }
 
   .raes-shell {
-    width: min(100% - 1rem, 1120px);
+    width: min(100% - 1rem, 1440px);
   }
 
   .card,

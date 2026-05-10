@@ -11,7 +11,7 @@
       <RouterLink :to="{ name: 'home', hash: '#projects' }" class="involved-card">
         <i class="bi bi-flower1"></i>
         <h2>Participar cultivando</h2>
-        <p>Únete a proyectos abiertos, cultiva siguiendo la pauta y comparte semillas o resultados.</p>
+        <p>Participa desde tu huerto, finca, terraza o asociación. Únete a proyectos abiertos, cultiva siguiendo la pauta y comparte semillas o resultados. Participar puede significar aportar semillas, recibirlas o ayudar a multiplicarlas.</p>
       </RouterLink>
       <RouterLink :to="{ name: 'forum-index' }" class="involved-card">
         <i class="bi bi-chat-square-text"></i>
@@ -20,7 +20,7 @@
       </RouterLink>
       <a href="mailto:redexperimentaldesemillas@gmail.com" class="involved-card">
         <i class="bi bi-envelope"></i>
-        <h2>Proponer cosas</h2>
+        <h2>Proponer ideas</h2>
         <p>Escribe si quieres colaborar, organizar un evento, aportar recursos o sugerir una línea de trabajo.</p>
       </a>
     </div>

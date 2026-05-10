@@ -2,9 +2,9 @@
 
 <template>
   <div class="container pt-5">
-    <h1 class="mb-4">¿Qué es RAES?</h1>
+    <h1 class="mb-4">¿Qué es Red Abierta Experimental de Semillas?</h1>
     <p class="lead">
-      <strong>RAES</strong> (Red Abierta Experimental de Semillas) es una plataforma colaborativa que conecta a
+      Red Abierta Experimental de Semillas es una plataforma colaborativa que conecta a
       personas interesadas en la investigación y experimentación con semillas y cultivos de forma abierta y participativa.
     </p>
 
@@ -61,7 +61,7 @@
 
     <h3 class="mt-5 mb-3"><i class="bi bi-heart me-2"></i>Filosofía</h3>
     <p>
-      RAES nace de la convicción de que la investigación agrícola no debe estar limitada a grandes instituciones.
+      Red Abierta Experimental de Semillas nace de la convicción de que la investigación agrícola no debe estar limitada a grandes instituciones.
       Creemos que una red distribuida de horticultores puede generar conocimiento valioso mediante la experimentación
       coordinada. Todo el conocimiento generado es abierto y compartido libremente.
     </p>

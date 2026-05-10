@@ -8,7 +8,7 @@
       <span class="eyebrow">Cómo funciona RAES</span>
       <h1>De una idea a un ensayo compartido.</h1>
       <p>
-        RAES conecta a personas que quieren probar, conservar, mejorar y compartir semillas en condiciones reales.
+        La Red Abierta Experimental de semillas conecta a personas que quieren probar, conservar, mejorar y compartir semillas en condiciones reales.
       </p>
     </section>
 

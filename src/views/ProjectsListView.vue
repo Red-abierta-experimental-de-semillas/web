@@ -25,9 +25,9 @@ const selectedProjects = computed(() =>
       <div class="raes-shell hero-layout">
         <div class="hero-copy">
           <span class="eyebrow">Red Abierta Experimental de Semillas</span>
-          <h1>Cultivar juntas poblaciones diversas.</h1>
+          <h1>Cultivar juntos poblaciones diversas.</h1>
           <p>
-            Una comunidad para crear proyectos de cultivo, experimentar en muchos huertos a la vez y compartir semillas
+            Una comunidad de aficionados y profesionales para crear proyectos de cultivo, experimentar en muchos huertos a la vez y compartir semillas
             adaptadas a cada territorio.
           </p>
           <div class="hero-actions">
@@ -45,7 +45,7 @@ const selectedProjects = computed(() =>
 
     <section class="raes-shell mission-section">
       <p>
-        La misión es facilitar proyectos colectivos para recuperar variedades, crear nuevas poblaciones diversas y
+        El objetivo es facilitar proyectos colectivos entre aficionados y profesionales para recuperar variedades, crear nuevas poblaciones diversas y
         aprender qué cultivos funcionan mejor en cada clima, suelo y forma de cultivar.
       </p>
     </section>
@@ -53,17 +53,17 @@ const selectedProjects = computed(() =>
     <section class="raes-shell section-links">
       <RouterLink :to="{ name: 'what-is-this' }" class="section-card">
         <img src="@/assets/landing-corn-transparent.png" alt="" />
-        <h2>Entiende la red</h2>
+        <h2>Aprende sobre la importancia de compartir</h2>
         <p>Qué es, por qué importa la diversidad genética y cómo se coordinan los proyectos.</p>
       </RouterLink>
       <a href="#projects" class="section-card">
         <img src="@/assets/landing-beans-transparent.png" alt="" />
-        <h2>Participa cultivando</h2>
-        <p>Únete a ensayos, recibe o aporta semillas, cultiva y comparte resultados.</p>
+        <h2>Participa cultivando en tu propio huerto</h2>
+        <p>Únete a ensayos, recibe y aporta semillas, cultiva y comparte resultados. Da igual si tienes un macetohuerto o un terreno, si eres aficionado o profesional, ¡cualquiera puede participar!</p>
       </a>
       <RouterLink :to="{ name: 'get-involved' }" class="section-card">
         <img src="@/assets/landing-flowers-transparent.png" alt="" />
-        <h2>Involúcrate</h2>
+        <h2>Involúcrate en la comunidad</h2>
         <p>Crea proyectos, propón ideas, ayuda en foros o escribe para colaborar.</p>
       </RouterLink>
     </section>
@@ -78,17 +78,27 @@ const selectedProjects = computed(() =>
       <div class="example-grid">
         <article class="example-card">
           <div class="example-graphic seed-loop" aria-label="Ciclo de semillas">
-            <span>Creadora</span><i class="bi bi-arrow-right"></i><span>Huertos</span><i class="bi bi-arrow-repeat"></i><span>Semillas mezcladas</span>
+            <span>Envío semillas</span><i class="bi bi-arrow-right"></i><span>Cultivo y selección semillas</span><i class="bi bi-arrow-repeat"></i><span>Envío semillas mezcladas</span>
           </div>
           <h3>Multiplicar semillas</h3>
-          <p>Alguien reparte semillas, varias personas cultivan, se selecciona y la cosecha vuelve a circular.</p>
+          <p>Un proyecto puede organizar una multiplicación colectiva para que la cosecha vuelva a circular mejor adaptada y con más futuro.</p>
+          <ul class="example-list">
+            <li>Recuperar o salvar variedades que están desapareciendo.</li>
+            <li>Crear variedades nuevas adaptadas a cada clima, suelo y forma de cultivar.</li>
+            <li>Levantar poblaciones muy diversas genéticamente, más resilientes y útiles para seguir seleccionando.</li>
+          </ul>
         </article>
         <article class="example-card">
           <div class="example-graphic data-loop" aria-label="Ensayo con datos">
             <span>Método</span><i class="bi bi-bar-chart-line"></i><span>Mediciones</span><i class="bi bi-chat-dots"></i><span>Resultados</span>
           </div>
           <h3>Aprender con ensayos</h3>
-          <p>El proyecto propone una pauta común y cada participante devuelve datos, fotos y observaciones.</p>
+          <p>También se pueden coordinar ensayos sencillos para comparar prácticas reales en muchos huertos a la vez.</p>
+          <ul class="example-list">
+            <li>Comparar distintas enmiendas y ver qué efecto tienen en el cultivo.</li>
+            <li>Probar formas de plantación diferentes con una pauta común.</li>
+            <li>Ensayar fechas de siembra o trasplante para encontrar los mejores tiempos en cada zona.</li>
+          </ul>
         </article>
       </div>
     </section>
@@ -327,6 +337,20 @@ const selectedProjects = computed(() =>
   line-height: 1.5;
 }
 
+.example-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.85rem 0 0;
+  padding-left: 1.15rem;
+  color: #344238;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.example-list li::marker {
+  color: var(--raes-green);
+}
+
 .examples-section,
 .selected-projects,
 .projects-panel {
@@ -484,7 +508,7 @@ const selectedProjects = computed(() =>
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
